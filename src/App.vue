@@ -4,7 +4,11 @@ import { useI18n } from 'vue-i18n';
 import ChevronIcon from '@/components/icons/ChevronIcon.vue';
 import SunIcon from '@/components/icons/SunIcon.vue';
 import MoonIcon from '@/components/icons/MoonIcon.vue';
+import HomeIcon from './components/icons/HomeIcon.vue';
 import TranslateIcon from '@/components/icons/TranslateIcon.vue';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const isDarkTheme = ref(false);
 const isSettingsMenuOpen = ref(false);
@@ -56,6 +60,10 @@ onMounted(() => {
 				<button class="btn">
 					<TranslateIcon class="icon" @click="changeLanguage"/>
 				</button>
+				<button class="btn">
+					<HomeIcon class="icon" @click="router.push('/')"/>
+				</button>
+
 			</div>
 			
 		</div>
