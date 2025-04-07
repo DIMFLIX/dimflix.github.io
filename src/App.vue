@@ -85,6 +85,7 @@ body {
 
 .settings-menu {
 	position: absolute;
+	top: 0;
 	width: 60px;
 	max-height: 40px;
 	background-color: var(--sbg1-color);
@@ -142,6 +143,11 @@ body {
 			}
 		}
 	}
-	
+}
+
+@media (max-width: 1000px) {
+  body {
+    padding: 60px 10px 0 10px;
+  }
 }
 </style>

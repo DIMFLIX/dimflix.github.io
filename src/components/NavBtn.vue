@@ -50,14 +50,28 @@ const props = defineProps({
 	text-decoration: none;
 	box-sizing: border-box;
 	
+	@media (max-width: 768px) {
+		height: 70px;
+		padding: 0 15px;
+	}
+
 	.left-side {
 		display: flex;
 		gap: 20px;
+
+		@media (max-width: 768px) {
+			gap: 12px;
+		}
 
 		.icon {
 			width: 40px;
 			height: 40px;
 			stroke: var(--text-color);
+
+			@media (max-width: 768px) {
+				width: 32px;
+				height: 32px;
+			}
 		}
 
 		.text-block {
@@ -70,11 +84,23 @@ const props = defineProps({
 				font-family: "PressStart2P";
 				font-size: 18px;
 				margin: 0;
+
+				@media (max-width: 768px) {
+					font-size: 14px;
+				}
+				
+				@media (max-width: 480px) {
+					font-size: 12px;
+				}
 			}
 			.description {
 				font-size: 15px;
 				text-align: center;
 				margin: 0;
+
+				@media (max-width: 768px) {
+					font-size: 12px;
+				}
 			}
 		}
 	}
@@ -82,6 +108,11 @@ const props = defineProps({
 	.right-side {
 		.icon {
 			stroke: var(--text-color);
+
+			@media (max-width: 480px) {
+				width: 24px;
+				height: 24px;
+			}
 		}
 	}
 }
