@@ -43,6 +43,9 @@ export const messages = {
         },
         certificates: {
           title: "Certificates"
+        },
+        patents: {
+          title: "Patents"
         }
       },
       portfolio: {
@@ -121,6 +124,9 @@ export const messages = {
         },
         certificates: {
           title: "Сертификаты"
+        },
+        patents: {
+          title: "Патенты"
         }
       },
       portfolio: {

@@ -5,6 +5,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 import { VueMarqueeSlider } from 'vue3-marquee-slider';
 import Image from 'primevue/image';
+import MultiPageImage from '@/components/primevue/MultiPageImage.vue';
 import '@/../node_modules/vue3-marquee-slider/dist/style.css'
 
 import 'vue3-carousel/dist/carousel.css';
@@ -39,6 +40,7 @@ import Flask from '@/components/icons/tech-stack/Flask.vue';
 const { t, locale } = useI18n();
 const screenSize = ref(0);
 
+
 const config = ref({
   itemsToShow: 3.95,
   wrapAround: true,
@@ -53,6 +55,12 @@ const awardsList = ref([
 	{src: require("@/assets/awards/Диплом-Минина.png"), alt: ""},
 	{src: require("@/assets/awards/IT-Чкалов.png"), alt: ""}
 ])
+
+// Для патентов создаем специальную структуру с обеими страницами
+const patentImages = ref([
+	require("@/assets/patents/patent-prevm-page1.png"),
+	require("@/assets/patents/patent-prevm-page2.png")
+]);
 
 const certificatesList = ref([
 	{src: require("@/assets/significant-certificates/it-planet ai-спорттех.png"), title: ""},
@@ -178,6 +186,19 @@ onBeforeUnmount(() => {
 				<Nginx/>
 				<Ngrok/>
 			</vue-marquee-slider>
+		</div>
+		<div class="box box-imgs" v-if="patentImages.length > 0">
+			<div class="box-title">
+				<p v-html="t('about.patents.title')"></p>
+			</div>
+			<div class="patent-container">
+				<MultiPageImage 
+					:pages="patentImages" 
+					:title="'Свидетельство о государственной регистрации программы для ЭВМ'" 
+					preview
+					class="image"
+				/>
+			</div>
 		</div>
 		<div class="box box-imgs">
 			<div class="box-title"><p v-html="t('about.awards.title')"></p></div>
@@ -317,4 +338,32 @@ onBeforeUnmount(() => {
 		}
 	}
 }
+
+// Стили для блока патентов
+.patent-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	
+	.patent-image {
+		width: auto;
+		max-width: 100%;
+		height: auto;
+	}
+}
+
+
+/* Подстройка цветов preview под тему сайта */
+:global(.p-image-preview-container) {
+  background: rgba(0,0,0,0.9) !important;
+}
+:global(.p-image-toolbar) {
+  background: var(--sbg1-color) !important;
+}
+:global(.p-image-toolbar button) {
+  color: var(--text-color) !important;
+}
+
+
 </style>
