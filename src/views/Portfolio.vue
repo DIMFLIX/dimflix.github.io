@@ -22,7 +22,7 @@ const projectsList = ref([
         src: require("@/assets/projects/defectSenseAI.png"), 
         title: "portfolio.defectSenseAI.title",
         description: "portfolio.defectSenseAI.description",
-        link: "https://github.com/DIMFLIX-OFFICIAL",
+        link: "https://github.com/DIMFLIX",
     },
     {
         src: require("@/assets/projects/terraWing.png"), 
@@ -34,13 +34,13 @@ const projectsList = ref([
         src: require("@/assets/projects/pyTypingCourse.png"), 
         title: "portfolio.pyTypingCourse.title",
         description: "portfolio.pyTypingCourse.description",
-        link: "https://github.com/DIMFLIX-OFFICIAL/PyTypingCourse",
+        link: "https://github.com/DIMFLIX/PyTypingCourse",
     },
     {
         src: require("@/assets/projects/spectrum-security.png"), 
         title: 'portfolio.spectrumSecurity.title',
         description: 'portfolio.spectrumSecurity.description',
-        link: "https://github.com/DIMFLIX-OFFICIAL/Spectrum-Security",
+        link: "https://github.com/DIMFLIX/Spectrum-Security",
     },
 
 ])
