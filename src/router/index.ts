@@ -11,33 +11,46 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: { title: 'DIMFLIX | Home' }
   }, 
   {
     path: "/about",
     name: "about",
-    component: About
+    component: About,
+    meta: { title: 'DIMFLIX | About' }
   },
   {
     path: "/portfolio",
     name: "portfolio",
-    component: Portfolio
+    component: Portfolio,
+    meta: { title: 'DIMFLIX | Portfolio' }
   },
   {
     path: '/articles',
     name: 'Articles',
-    component: ArticlesPage
+    component: ArticlesPage,
+    meta: { title: 'DIMFLIX | Articles' }
   },
   {
     path: '/articles/:id',
     name: 'Article',
     component: ArticlePage,
-    props: true
+    props: true,
+    meta: { title: 'DIMFLIX | Article' }
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+// Update document title based on route meta
+router.beforeEach((to, from, next) => {
+  if (to.meta?.title) {
+    document.title = to.meta.title as string;
+  }
+  next();
 });
 
 export default router;
