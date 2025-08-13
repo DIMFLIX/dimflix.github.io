@@ -48,6 +48,14 @@ const config = ref({
   gap: 100,
 });
 
+// Отдельная конфигурация для патентов - всегда показывает 1 элемент
+const patentsConfig = ref({
+  itemsToShow: 1,
+  wrapAround: true,
+  transition: 500,
+  gap: 100,
+});
+
 const awardsList = ref([
 	{src: require("@/assets/awards/it-planet-ai-спорттех-финал.png"), alt: ""},
 	{src: require("@/assets/awards/Международный-ВШЭ-Дроны.jpg"), alt: ""},
@@ -56,10 +64,14 @@ const awardsList = ref([
 	{src: require("@/assets/awards/IT-Чкалов.png"), alt: ""}
 ])
 
-// Для патентов создаем специальную структуру с обеими страницами
-const patentImages = ref([
-	require("@/assets/patents/patent-prevm-page1.png"),
-	require("@/assets/patents/patent-prevm-page2.png")
+const patentsList = ref([
+	{
+		title: "Свидетельство о государственной регистрации программы для ЭВМ",
+		pages: [
+			require("@/assets/patents/patent-prevm-page1.png"),
+			require("@/assets/patents/patent-prevm-page2.png")
+		]
+	},
 ]);
 
 const certificatesList = ref([
@@ -187,18 +199,23 @@ onBeforeUnmount(() => {
 				<Ngrok/>
 			</vue-marquee-slider>
 		</div>
-		<div class="box box-imgs" v-if="patentImages.length > 0">
+		<div class="box box-imgs" v-if="patentsList.length > 0">
 			<div class="box-title">
 				<p v-html="t('about.patents.title')"></p>
 			</div>
-			<div class="patent-container">
-				<MultiPageImage 
-					:pages="patentImages" 
-					:title="'Свидетельство о государственной регистрации программы для ЭВМ'" 
-					preview
-					class="image"
-				/>
-			</div>
+			<Carousel v-bind="patentsConfig">
+				<Slide v-for="patent in patentsList" :key="patent.title">
+					<MultiPageImage 
+						:pages="patent.pages" 
+						:title="patent.title" 
+						preview
+						class="image"
+					/>
+				</Slide>
+				<template #addons>
+					<Pagination />
+				</template>
+			</Carousel>
 		</div>
 		<div class="box box-imgs">
 			<div class="box-title"><p v-html="t('about.awards.title')"></p></div>
@@ -352,7 +369,6 @@ onBeforeUnmount(() => {
 		height: auto;
 	}
 }
-
 
 /* Подстройка цветов preview под тему сайта */
 :global(.p-image-preview-container) {

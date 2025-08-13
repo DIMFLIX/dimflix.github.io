@@ -336,7 +336,6 @@ export default {
 
 .multi-page-image-container img {
     max-width: 100%;
-    max-height: 320px;
     width: auto;
     height: auto;
     object-fit: contain;
