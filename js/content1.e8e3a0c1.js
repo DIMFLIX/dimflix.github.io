@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkmy_site"]=self["webpackChunkmy_site"]||[]).push([[275],{6561:function(e,t,i){i.r(t),t["default"]='---\ndate: 2023-10-25 12:32\ntitle: "My first article"\nexcerpt: "Small description for my first article"\n---\n\n# My FIRST Article\nMade an article for testing.'}}]);
-//# sourceMappingURL=content1.e8e3a0c1.js.map

@@ -1,1 +1,0 @@
-{"version":3,"file":"js/content3.24bba347.js","mappings":"mHAAA,+J","sources":["webpack://my-site/./src/assets/articles/ru/test_article.md"],"sourcesContent":["export default \"---\\ndate: 2023-10-25 12:32\\ntitle: \\\"Моя первая статья\\\"\\nexcerpt: \\\"Краткое описание статьи\\\"\\n---\\n\\n# Моя ПЕРВАЯ статья\\nСделал статью для теста\";"],"names":[],"sourceRoot":""}
