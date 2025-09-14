@@ -8,8 +8,8 @@ const props = defineProps<{ article: ArticleMeta }>()
 const { t, locale } = useI18n();
 const router = useRouter()
 
-const formattedDate = computed(() => {
-  const date = new Date(props.article.date)
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString)
   
   const day = String(date.getDate()).padStart(2, '0')
   const month = String(date.getMonth() + 1).padStart(2, '0')
@@ -18,6 +18,15 @@ const formattedDate = computed(() => {
   const minutes = String(date.getMinutes()).padStart(2, '0')
 
   return `${day}-${month}-${year} ${hours}:${minutes}`
+}
+
+const formattedDate = computed(() => formatDate(props.article.date))
+
+const formattedUpdatedAt = computed(() => {
+  if (props.article.updatedAt && props.article.updatedAt !== props.article.date) {
+    return formatDate(props.article.updatedAt)
+  }
+  return null
 })
 
 const navigateToArticle = () => {
@@ -31,7 +40,14 @@ const navigateToArticle = () => {
             <h3 class="title">{{ article.title }}</h3>
             <p class="excerpt">{{ article.excerpt }}</p>
             <div class="meta">
-                <time v-if="article.date">{{ formattedDate }}</time>
+                <div class="dates">
+                    <time v-if="article.date" class="date">
+                        <span class="date-label">{{ t("articles.published") }}:</span> {{ formattedDate }}
+                    </time>
+                    <time v-if="formattedUpdatedAt" class="date updated">
+                        <span class="date-label">{{ t("articles.updated") }}:</span> {{ formattedUpdatedAt }}
+                    </time>
+                </div>
                 <span class="read-more">{{ t("articles.readMore") }}</span>
             </div>
         </div>
@@ -69,11 +85,36 @@ const navigateToArticle = () => {
         align-items: center;
         font-size: 0.875rem;
         color: var(--text-color);
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .dates {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .date {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        opacity: 0.8;
+    }
+
+    .date.updated {
+        color: var(--green-color);
+    }
+
+    .date-label {
+        font-weight: 500;
+        font-size: 0.8rem;
     }
 
     .read-more {
         font-weight: 500;
         color: var(--mauve-color);
+        margin-left: auto;
     }
 }
 

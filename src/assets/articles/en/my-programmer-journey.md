@@ -1,5 +1,6 @@
 ---
 date: 2025-08-31 23:15
+updatedAt: 2025-08-31 23:15
 title: "A Programmer's Journey: How a Hobby Became a Profession"
 excerpt: "A personal story of professional growth: from the first experiments with code to a confident career as a programmer."
 ---

@@ -77,7 +77,9 @@ export const messages = {
       articles: {
         title: "Latest Articles",
         back: "Back to Articles",
-        readMore: "Read more"
+        readMore: "Read more",
+        published: "Published",
+        updated: "Updated"
       }
     },
     ru: {
@@ -158,7 +160,9 @@ export const messages = {
       articles: {
         title: "Последние статьи",
         back: "Назад ко всем статьям",
-        readMore: "Подробнее"
+        readMore: "Подробнее",
+        published: "Опубликовано",
+        updated: "Обновлено"
       }
     }
   }

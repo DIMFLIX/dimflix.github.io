@@ -11,6 +11,7 @@ const parseMarkdownContent = (content: string) => {
   let title = data.title || "";
   const excerpt = data.excerpt || "";
   const parsedDate = new Date(data.date || new Date())
+  const updatedAt = data.updatedAt ? new Date(data.updatedAt) : null
 
   // Автоматическое извлечение заголовка из первого h1
   if (!title) {
@@ -29,6 +30,7 @@ const parseMarkdownContent = (content: string) => {
     title: title || "Untitled",
     excerpt: excerpt || "",
     date: parsedDate.toISOString(),
+    updatedAt: updatedAt?.toISOString() || null,
   };
 };
 
@@ -43,13 +45,14 @@ export const getArticlesMeta = async (lang: string): Promise<ArticleMeta[]> => {
       const slug = match[2];
       try {
         const content = await context(path);
-        const { title, excerpt, date } = parseMarkdownContent(content.default);
+        const { title, excerpt, date, updatedAt } = parseMarkdownContent(content.default);
 
         articles.push({
           slug,
           title,
           excerpt,
           date: new Date(date).toISOString(),
+          updatedAt: updatedAt || undefined,
           lang,
         });
       } catch (error) {

@@ -34,6 +34,16 @@ const articleId = route.params.id as string
 	box-sizing: border-box;
 	overflow: scroll;
 
+    @media (max-width: 768px) {
+        gap: 50px;
+        padding: 1rem 3vw 30px 3vw;
+    }
+
+    @media (max-width: 480px) {
+        gap: 30px;
+        padding: 1rem 2vw 20px 2vw;
+    }
+
     .article-page {
         min-width: 800px;
         max-width: 800px;
@@ -41,6 +51,23 @@ const articleId = route.params.id as string
         padding: 2rem 1rem;
         border: 2px solid var(--sbg1-color);
         border-radius: 15px;
+
+        @media (max-width: 850px) {
+            min-width: unset;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            padding: 1.5rem 1rem;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 480px) {
+            padding: 1rem 0.75rem;
+            border-radius: 10px;
+            border-width: 1px;
+        }
     }
 
     .back-button {
@@ -50,6 +77,17 @@ const articleId = route.params.id as string
         cursor: pointer;
         padding: 0.5rem 1rem;
         font-size: 1rem;
+        transition: all 0.3s ease;
+
+        @media (max-width: 768px) {
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+        }
+
+        @media (max-width: 480px) {
+            font-size: 0.85rem;
+            padding: 0.3rem 0.6rem;
+        }
     }
 
     .back-button:hover {
