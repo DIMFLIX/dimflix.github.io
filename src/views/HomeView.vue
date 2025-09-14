@@ -7,7 +7,7 @@ import AboutMeIcon from "@/components/icons/AboutMeIcon.vue";
 import PortfolioIcon from "@/components/icons/PortfolioIcon.vue";
 import ArticlesIcon from "@/components/icons/ArticlesIcon.vue";
 import YoutubeIcon from "@/components/icons/YoutubeIcon.vue";
-import VkIcon from "@/components/icons/VkIcon.vue";
+import KaggleIcon from "@/components/icons/KaggleIcon.vue";
 import TelegramIcon from "@/components/icons/TelegramIcon.vue";
 import GithubIcon from "@/components/icons/GithubIcon.vue";
 import ResumeIcon from "@/components/icons/ResumeIcon.vue";
@@ -50,8 +50,8 @@ const photos = [
       <div class="social-media">
         <SocialMediaBtn :IconComponent="YoutubeIcon" url="https://www.youtube.com/dimflix"
           color="var(--maroon-color)" />
-        <SocialMediaBtn :IconComponent="VkIcon" url="https://vk.ru/dimflix_official"
-          color="var(--blue-color)" />
+        <SocialMediaBtn :IconComponent="KaggleIcon" url="https://www.kaggle.com/dimflix"
+          color="var(--sky-color)" />
         <SocialMediaBtn :IconComponent="TelegramIcon" url="https://t.me/dimflix_official"
           color="var(--lavender-color)" />
         <SocialMediaBtn :IconComponent="GithubIcon" url="https://github.com/DIMFLIX"
@@ -90,6 +90,7 @@ const photos = [
 
   @media (max-width: 1315px) {
     flex-direction: column;
+    align-items: center;
     gap: 50px;
     height: auto;
     padding: 20px;
@@ -120,6 +121,9 @@ const photos = [
 .left-side {
   width: 100%;
   max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   @media (max-width: 768px) {
     width: 100%;
@@ -232,6 +236,7 @@ const photos = [
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 20px;
   position: relative;
   width: 100%;
@@ -245,7 +250,7 @@ const photos = [
     width: 100%;
     border-radius: 10px;
     background-color: var(--button-color);
-    height: 90px;
+    height: 80px;
 	min-height: 60px;
     gap: 10px;
     cursor: pointer;
@@ -253,6 +258,16 @@ const photos = [
     text-decoration: none;
     padding: 0 15px;
     box-sizing: border-box;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
 
 	@media (max-width: 768px) {
 		height: 70px;
@@ -275,18 +290,19 @@ const photos = [
 
     .text {
       font-family: "PressStart2P";
-      font-size: 18px;
+      font-size: 16px;
       color: var(--button-text-color);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      margin: 0;
 
       @media (max-width: 768px) {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       @media (max-width: 480px) {
-        font-size: 14px;
+        font-size: 12px;
       }
     }
   }
