@@ -9,7 +9,7 @@ import MultiPageImage from '@/components/primevue/MultiPageImage.vue';
 import '@/../node_modules/vue3-marquee-slider/dist/style.css'
 
 import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide, Pagination } from 'vue3-carousel';
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
 
 import Capacitor from '@/components/icons/tech-stack/Capacitor.vue';
 import Css from '@/components/icons/tech-stack/Css.vue';
@@ -39,6 +39,38 @@ import Flask from '@/components/icons/tech-stack/Flask.vue';
 
 const { t, locale } = useI18n();
 const screenSize = ref(0);
+
+// Вычисление лет опыта от 13 мая 2021 года
+const calculateExperience = () => {
+	const startDate = new Date(2021, 4, 13); // 13 мая 2021 (месяц начинается с 0)
+	const currentDate = new Date();
+	const diffTime = Math.abs(currentDate - startDate);
+	const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
+	return diffYears;
+};
+
+const experienceYears = ref(calculateExperience());
+
+// Функция для правильного склонения в русском языке
+const getExperienceLabel = () => {
+	if (locale.value === 'ru') {
+		const years = experienceYears.value;
+		const lastDigit = years % 10;
+		const lastTwoDigits = years % 100;
+		
+		if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+			return `Лет<br>Опыта`;
+		} else if (lastDigit === 1) {
+			return `Год<br>Опыта`;
+		} else if (lastDigit >= 2 && lastDigit <= 4) {
+			return `Года<br>Опыта`;
+		} else {
+			return `Лет<br>Опыта`;
+		}
+	} else {
+		return t('about.aboutme.stats.experiance');
+	}
+};
 
 
 const config = ref({
@@ -154,8 +186,8 @@ onBeforeUnmount(() => {
 			<DiamondLine />
 			<div class="stats">
 				<div class="stat">
-					<p class="count">03</p>
-					<p class="label" v-html="t('about.aboutme.stats.experiance')"></p>
+					<p class="count">{{ experienceYears.toString().padStart(2, '0') }}</p>
+					<p class="label" v-html="getExperienceLabel()"></p>
 				</div>
 				<div class="stat">
 					<p class="count">50+</p>
@@ -213,6 +245,7 @@ onBeforeUnmount(() => {
 					/>
 				</Slide>
 				<template #addons>
+					<Navigation />
 					<Pagination />
 				</template>
 			</Carousel>
@@ -224,6 +257,7 @@ onBeforeUnmount(() => {
 					<Image class="image" :src="award.src" :alt="award.title" preview />
 				</Slide>
 				<template #addons>
+					<Navigation />
 					<Pagination />
 				</template>
 			</Carousel>
@@ -238,6 +272,7 @@ onBeforeUnmount(() => {
 				</Slide>
 
 				<template #addons>
+					<Navigation />
 					<Pagination />
 				</template>
 			</Carousel>
@@ -335,23 +370,27 @@ onBeforeUnmount(() => {
 	align-items: center;
 	justify-content: space-around;
 	box-sizing: border-box;
-	gap: .3vw;
+	gap: 2vw;
 
 	.stat {
 		display: flex;
+		flex-direction: column;
 		align-items: center;
-		gap: 10px;
+		gap: 0.5vw;
 
 		.count {
 			font-family: "Rubik Doodle Shadow", sans-serif;
-			font-size: 5.3vw;
+			font-size: 4.5vw;
 			margin: 0;
+			line-height: 1;
 		}
 
 		.label {
 			font-family: 'Aldrich', sans-serif;
-			font-size: 1vw;
+			font-size: 1.1vw;
 			margin: 0;
+			text-align: center;
+			line-height: 1.3;
 		}
 	}
 }
@@ -381,5 +420,277 @@ onBeforeUnmount(() => {
   color: var(--text-color) !important;
 }
 
+/* Стили для навигации каруселей */
+:global(.carousel__prev),
+:global(.carousel__next) {
+  background-color: var(--sbg2-color) !important;
+  color: var(--text-color) !important;
+  border-radius: 50%;
+  width: 35px !important;
+  height: 35px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+:global(.carousel__prev:hover),
+:global(.carousel__next:hover) {
+  opacity: 1;
+  background-color: var(--primary-color) !important;
+}
+
+:global(.carousel__icon) {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+/* Навигация на мобильных устройствах */
+@media screen and (max-width: 768px) {
+  :global(.carousel__prev),
+  :global(.carousel__next) {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  
+  :global(.carousel__icon) {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+
+/* Медиа-запросы для мобильных устройств */
+@media screen and (max-width: 768px) {
+	.page {
+		gap: 50px;
+		padding: 80px 3vw 30px 3vw;
+	}
+
+	.box {
+		padding: 50px 15px 15px 15px;
+		gap: 20px;
+
+		.box-title {
+			top: -20px;
+			left: 20px;
+			padding: 8px 20px;
+			border-radius: 8px;
+			height: auto;
+			min-height: 40px;
+
+			p {
+				font-size: 18px;
+			}
+		}
+	}
+
+	.box-imgs {
+		gap: 20px !important;
+	}
+
+	/* Адаптация блока About Me */
+	.img-and-text {
+		flex-direction: column;
+		gap: 20px;
+		align-items: center;
+
+		.photo {
+			width: 100%;
+			max-width: 300px;
+			height: auto;
+			max-height: 350px;
+			object-fit: cover;
+			border-radius: 15px;
+		}
+
+		.text {
+			width: 100%;
+			color: var(--text-color);
+			font-size: 15px;
+			line-height: 1.6;
+
+			h4 {
+				font-size: 18px;
+				margin-bottom: 5px;
+			}
+
+			h2 {
+				font-size: 26px;
+				margin-top: 10px;
+				margin-bottom: 15px;
+			}
+
+			p {
+				font-size: 15px;
+				margin: 10px 0;
+				line-height: 1.7;
+			}
+		}
+	}
+
+	/* Адаптация блока статистики */
+	.stats {
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		gap: 15px;
+
+		.stat {
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: 5px;
+			min-width: 90px;
+
+			.count {
+				font-size: 42px;
+			}
+
+			.label {
+				font-size: 12px;
+				text-align: center;
+				max-width: 100px;
+			}
+		}
+	}
+
+	/* Адаптация иконок тех. стека */
+	#carousel1, #carousel2 {
+		svg {
+			width: 60px !important;
+			height: 60px !important;
+		}
+	}
+}
+
+/* Дополнительные стили для очень маленьких экранов */
+@media screen and (max-width: 480px) {
+	.page {
+		gap: 30px;
+		padding: 70px 2vw 20px 2vw;
+	}
+
+	.box {
+		padding: 45px 10px 10px 10px;
+
+		.box-title {
+			left: 15px;
+			
+			p {
+				font-size: 16px;
+			}
+		}
+	}
+
+	.img-and-text {
+		.photo {
+			max-width: 250px;
+			max-height: 300px;
+		}
+
+		.text {
+			h4 {
+				font-size: 16px;
+			}
+
+			h2 {
+				font-size: 22px;
+			}
+
+			p {
+				font-size: 14px;
+			}
+		}
+	}
+
+	.stats {
+		.stat {
+			.count {
+				font-size: 36px;
+			}
+
+			.label {
+				font-size: 11px;
+				max-width: 80px;
+			}
+		}
+	}
+
+	/* Адаптация иконок тех. стека для маленьких экранов */
+	#carousel1, #carousel2 {
+		svg {
+			width: 50px !important;
+			height: 50px !important;
+		}
+	}
+}
+
+/* Медиа-запросы для планшетов */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+	.page {
+		gap: 70px;
+		padding: 90px 4vw 40px 4vw;
+	}
+
+	.box {
+		.box-title {
+			top: -15px;
+			left: 30px;
+			padding: 10px 15px;
+			height: auto;
+			min-height: 35px;
+
+			p {
+				font-size: 20px;
+			}
+		}
+	}
+
+	.img-and-text {
+		.photo {
+			max-height: 350px;
+		}
+
+		h4 {
+			font-size: 18px;
+		}
+
+		h2 {
+			font-size: 28px;
+		}
+
+		.text {
+			font-size: 16px;
+
+			p {
+				font-size: 16px;
+			}
+		}
+	}
+
+	.stats {
+		.stat {
+			.count {
+				font-size: 60px;
+			}
+
+			.label {
+				font-size: 14px;
+			}
+		}
+	}
+
+	/* Адаптация иконок тех. стека для планшетов */
+	#carousel1, #carousel2 {
+		svg {
+			width: 70px !important;
+			height: 70px !important;
+		}
+	}
+}
 
 </style>
