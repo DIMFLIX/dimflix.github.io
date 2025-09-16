@@ -1,8 +1,9 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import MarkdownIt from 'markdown-it';
 import DOMPurify from 'dompurify';
+import { getMultipleRepoStats, formatNumber } from '@/services/githubService';
 
 const { t, locale } = useI18n();
 const screenSize = ref(0);
@@ -152,6 +153,20 @@ const renderedReadme = computed(() => {
 
 const selectedBranch = ref('main'); // Хранение текущей ветки
 const branchCache = ref({}); // Кеш веток для каждого репозитория
+const repoStats = ref(new Map()); // Статистика репозиториев (звёзды и форки)
+
+// Загружаем статистику репозиториев при монтировании
+onMounted(async () => {
+  const urls = projectsList.value.map(p => p.link).filter(Boolean);
+  if (urls.length > 0) {
+    try {
+      const stats = await getMultipleRepoStats(urls);
+      repoStats.value = stats;
+    } catch (error) {
+      console.error('Failed to load repository statistics:', error);
+    }
+  }
+});
 
 const selectProject = async (project, index) => {
   selectedProject.value = index;
@@ -174,10 +189,8 @@ const selectProject = async (project, index) => {
       branch = branchCache.value[project.repo];
       response = await fetch(`https://raw.githubusercontent.com/${project.repo}/${branch}/README.md`);
     } else {
-      // Try to get README from main branch first
       response = await fetch(`https://raw.githubusercontent.com/${project.repo}/main/README.md`);
       
-      // If not found in main, try master branch
       if (!response.ok) {
         response = await fetch(`https://raw.githubusercontent.com/${project.repo}/master/README.md`);
         if (response.ok) {
@@ -235,6 +248,25 @@ const openLink = (link) => {
 					@click="selectProject(p, index)"
 				>
 					<img :src="p.src" :alt="t(p.title)">
+					<!-- Статистика репозитория -->
+					<div v-if="p.link && repoStats.has(p.link)" class="repo-stats">
+						<div class="stat-item">
+							<svg class="star-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+							</svg>
+							<span class="stat-count">{{ formatNumber(repoStats.get(p.link)?.stars || 0) }}</span>
+						</div>
+						<div class="stat-item">
+							<svg class="fork-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+								<circle cx="12" cy="18" r="3"/>
+								<circle cx="6" cy="6" r="3"/>
+								<circle cx="18" cy="6" r="3"/>
+								<path d="m18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"/>
+								<path d="m12 12v3"/>
+							</svg>
+							<span class="stat-count">{{ formatNumber(repoStats.get(p.link)?.forks || 0) }}</span>
+						</div>
+					</div>
 					<div class="overlay">
 						<h3 class="title">
 							{{ t(p.title) }}
@@ -318,14 +350,14 @@ const openLink = (link) => {
 
 .content-wrapper {
 	width: 100%;
-	height: calc(100vh - 120px); // Фиксированная высота с учётом padding'ов
+	height: calc(100vh - 120px);
 	display: flex;
 	gap: 2rem;
-	max-width: 1800px; // Увеличиваю для лучшего использования пространства
+	max-width: 1800px; 
 	margin: 0 auto;
 	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 	position: relative;
-	justify-content: center; // Лучшее центрирование контента
+	justify-content: center;
 	
 	@media (max-width: 1024px) {
 		gap: 1.5rem;
@@ -340,43 +372,40 @@ const openLink = (link) => {
 	flex: 1;
 	display: grid;
 	grid-template-columns: repeat(3, minmax(350px, 450px));
-	grid-auto-rows: minmax(min-content, max-content); // Автоматическая высота строк
+	grid-auto-rows: minmax(min-content, max-content);
 	justify-content: center;
 	align-content: start;
-	gap: 2.5rem !important; // Принудительно задаём отступы между всеми элементами
+	gap: 2.5rem !important;
 	padding: 2rem;
 	overflow-y: auto;
 	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 	
 	&.with-readme {
-		// ПОЛНОСТЬЮ ПЕРЕДЕЛЫВАЕМ КОНТЕЙНЕР ДЛЯ НОРМАЛЬНОГО СКРОЛЛА
-		display: block !important; // ОБЫЧНЫЙ BLOCK вместо flex
+		display: block !important;
 		width: 100% !important;
-		max-width: 380px !important; // Уменьшаю ширину для лучшего баланса с README
-		height: 100% !important; // Полная высота родителя
-		overflow-y: scroll !important; // ПРИНУДИТЕЛЬНО scroll вместо auto
+		max-width: 380px !important;
+		height: 100% !important;
+		overflow-y: scroll !important;
 		overflow-x: hidden !important;
 		padding: 1rem !important;
 		
 		.box {
-			// Обычные блочные элементы один под другим
 			display: block !important;
-			width: 100% !important; // Полная ширина контейнера
-			max-width: 450px !important; // Максимальная ширина
-			height: auto !important; // Автоматическая высота
-			aspect-ratio: 16/10 !important; // Пропорции
-			margin: 0 auto 2.5rem auto !important; // Центрируем и отступ снизу
-			position: static !important;
+			width: 100% !important;
+			max-width: 450px !important;
+			height: auto !important;
+			aspect-ratio: 16/10 !important;
+			margin: 0 auto 2.5rem auto !important;
+			position: relative !important;
 			z-index: auto !important;
 			transform: none !important;
 			float: none !important;
 			
 			&:last-child {
-				margin-bottom: 0 !important; // Последняя без отступа
+				margin-bottom: 0 !important;
 			}
 		}
 		
-		// Красивый скроллбар для списка карточек
 		&::-webkit-scrollbar {
 			width: 8px;
 		}
@@ -403,9 +432,7 @@ const openLink = (link) => {
         padding: 1.5rem;
     }
 
-    // Мобильная версия - ПОЛНАЯ КОПИЯ КОДА ИЗ with-readme НА ПК!
     @media (max-width: 768px) {
-        // КОПИРУЮ КОД ИЗ &.with-readme НА ПК
         display: block !important;
         width: 100% !important;
         max-width: 500px !important;
@@ -415,14 +442,13 @@ const openLink = (link) => {
         padding: 1rem !important;
         
         .box {
-            // КОПИРУЮ ТОЧНО КОД ИЗ &.with-readme .box НА ПК
             display: block !important;
             width: 100% !important;
             max-width: 450px !important;
             height: auto !important;
             aspect-ratio: 16/10 !important;
-            margin: 0 auto 2.5rem auto !important; // КОПИРУЮ ОТСТУПЫ КАК НА ПК
-            position: static !important;
+            margin: 0 auto 2.5rem auto !important;
+            position: relative !important;
             z-index: auto !important;
             transform: none !important;
             float: none !important;
@@ -433,8 +459,7 @@ const openLink = (link) => {
         }
 
         &.with-readme {
-			// НА МОБИЛЬНЫХ СКРЫВАЕМ ПЛИТКИ - README НА ВЕСЬ ЭКРАН!
-			display: none !important; // Прячем плитки как было раньше
+			display: none !important;
 		}
     }
     
@@ -454,20 +479,18 @@ const openLink = (link) => {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
         aspect-ratio: 16/10;
-        width: 100%; // Плитка занимает всю ширину ячейки grid
-        height: auto; // Автоматическая высота на основе aspect-ratio
+        width: 100%;
+        height: auto;
         
-        // Не трогаем margin чтобы grid gap работал
         transform: none !important;
         z-index: 1;
         
-        // НА МОБИЛЬНЫХ - ТОЛЬКО ОТСТУПЫ, НИКАКИХ ПАДДИНГОВ И ГРАНИЦ
         @media screen and (max-width: 768px) {
             margin: 0 auto 2.5rem auto !important;
         }
         
         &:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); // Уменьшил тень
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transform: translateY(-2px) scale(1.02) !important;
             z-index: 50;
             position: relative;
@@ -477,15 +500,13 @@ const openLink = (link) => {
             z-index: 100;
             box-shadow: 
                 0 0 0 3px var(--accent-color, #4a9eff),
-                0 8px 20px rgba(0, 0, 0, 0.25); // Уменьшил тень и интенсивность
+                0 8px 20px rgba(0, 0, 0, 0.25);
             transform: scale(1.05) !important;
             position: relative;
         }
         
-        // ЭТОТ БЛОК ПЕРЕБИВАЛ ОТСТУПЫ! УДАЛЯЮ!
-        
         @media (max-width: 480px) {
-            max-width: 350px; // Немного меньше для маленьких экранов
+            max-width: 350px;
         }
         
         img {
@@ -497,6 +518,96 @@ const openLink = (link) => {
 
         &:hover img {
             transform: scale(1.08);
+        }
+    }
+}
+
+.repo-stats {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    gap: 10px;
+    z-index: 5;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        padding: 4px 8px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        
+        .star-icon,
+        .fork-icon {
+            opacity: 0.8;
+            color: rgba(255, 255, 255, 0.9);
+            stroke-width: 1.5;
+        }
+        
+        .stat-count {
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+        
+        &:hover {
+            background: rgba(0, 0, 0, 0.8);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+    }
+    
+    .box:hover & {
+        opacity: 1;
+    }
+    
+    .portfolio-grid.with-readme & {
+        z-index: 1;
+        opacity: 0.8;
+    }
+    
+    .portfolio-grid.with-readme .box:hover & {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    
+    @media (max-width: 768px) {
+        bottom: 8px;
+        left: 8px;
+        gap: 8px;
+        
+        .stat-item {
+            padding: 6px 10px;
+            border-radius: 14px;
+            
+            .star-icon,
+            .fork-icon {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .stat-count {
+                font-size: 13px;
+            }
+        }
+    }
+    
+    @media (max-width: 480px) {
+        gap: 6px;
+        
+        .stat-item {
+            padding: 5px 8px;
+            
+            .stat-count {
+                font-size: 11px;
+            }
         }
     }
 }
@@ -515,13 +626,11 @@ const openLink = (link) => {
     text-align: center;
     padding: 2rem 1.5rem;
     
-    // По умолчанию оверлей скрыт
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
 }
 
-// Показываем оверлей при hover или selected
 .portfolio-grid .box:hover .overlay,
 .portfolio-grid .box.selected .overlay {
     opacity: 1;
@@ -560,10 +669,9 @@ const openLink = (link) => {
 	}
 }
 
-/* README Panel Styles */
 .readme-panel {
-	width: 70%; // Увеличиваю ширину для лучшего использования пространства
-	max-width: 1200px; // Увеличиваю максимальную ширину
+	width: 70%;
+	max-width: 1200px;
 	height: 95%;
 	max-height: 95vh;
 	background: var(--bg-color);
@@ -573,8 +681,9 @@ const openLink = (link) => {
 	flex-direction: column;
 	box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
 	overflow: hidden;
-	margin: 0 auto; // Центрирую панель
+	margin: 0 auto;
 	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	z-index: 100;
 	
 	@media (max-width: 1400px) {
 		width: 65%;
@@ -586,11 +695,11 @@ const openLink = (link) => {
 	
 	@media (max-width: 768px) {
 		position: fixed;
-		left: 0 !important; // НА ВЕСЬ ЭКРАН КАК БЫЛО
+		left: 0 !important;
 		right: 0;
 		top: 0;
 		bottom: 0;
-		width: 100% !important; // ПОЛНОЭКРАННЫЙ README
+		width: 100% !important;
 		height: 100vh;
 		max-height: 100vh;
 		max-width: 100%;
@@ -623,7 +732,7 @@ const openLink = (link) => {
 		align-items: center;
 		gap: 1rem;
 		flex: 1;
-		min-width: 0; // Для правильного ellipsis
+		min-width: 0;
 		
 		h2 {
 			margin: 0;
@@ -707,7 +816,6 @@ const openLink = (link) => {
 	overflow-x: hidden;
 	padding: 2rem;
 	
-	/* Custom scrollbar */
 	&::-webkit-scrollbar {
 		width: 8px;
 	}
@@ -754,7 +862,6 @@ const openLink = (link) => {
 }
 
 
-/* Индикатор прогресса для мобильных */
 .mobile-progress {
 	position: fixed;
 	top: 20px;
@@ -797,7 +904,6 @@ const openLink = (link) => {
 	opacity: 0.9;
 }
 
-/* Markdown content styles */
 .markdown-content {
 	color: var(--text-color);
 	line-height: 1.6;

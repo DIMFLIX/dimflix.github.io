@@ -176,7 +176,7 @@ onBeforeUnmount(() => {
 		<div class="box">
 			<div class="box-title"><p v-html="t('about.aboutme.title')"></p></div>
 			<div class="img-and-text">
-				<img class="photo" src="@/assets/my-photo.jpg">
+				<img class="photo" src="@/assets/my-photo1.jpg">
 				<div class="text">
 					<h4 v-html="t('about.aboutme.hello')"></h4>
 					<h2 v-html="t('about.aboutme.name')"></h2>
