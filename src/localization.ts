@@ -51,7 +51,11 @@ export const messages = {
       portfolio: {
         spectrumSecurity: {
           title: "Spectrum Security",
-          description: "Spectrum Security is a small project written entirely in Python. To check a PC for viruses, it uses specially trained machine learning, which recognizes malicious code in Windows executable files with up to 90% accuracy."
+          description: "Spectrum Security is a small antivirus program that uses a special ML algorithm to detect viruses with 90% accuracy."
+        },
+        omniview: {
+          title: "OmniView",
+          description: "A system for simultaneous viewing and processing of streams from multiple cameras (USB/IP) with the ability to integrate into computer vision."
         },
         meowrch: {
           title: "Meowrch",
@@ -134,7 +138,11 @@ export const messages = {
       portfolio: {
         spectrumSecurity: {
           title: "Spectrum Security",
-          description: "Spectrum Security - это небольшой проект, полностью написанный на Python. Для проверки компьютера на наличие вирусов он использует специальный ML алгоритм, которое распознает вредоносный код в исполняемых файлах Windows с точностью до 90 %."
+          description: "Spectrum Security - это небольшой антивирус, использующий специальный ML алгоритм, распознающий вирусы с точностью до 90 %."
+        },
+        omniview: {
+          title: "OmniView",
+          description: "Система для одновременного просмотра и обработки потоков с нескольких камер (USB/IP) с возможностью интеграции в компьютерное зрение."
         },
         meowrch: {
           title: "Meowrch",

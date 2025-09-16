@@ -16,18 +16,25 @@ const projectsList = ref([
         repo: "meowrch/meowrch"
     },
 	{
+		src: require("@/assets/projects/omniview.png"), 
+        title: "portfolio.omniview.title",
+        description: "portfolio.omniview.description",
+        link: "https://github.com/DIMFLIX/OmniView",
+        repo: "DIMFLIX/OmniView"
+	},
+	{
         src: require("@/assets/projects/pixelgan.png"), 
         title: "portfolio.pixelGan.title",
         description: "portfolio.pixelGan.description",
         link: "https://github.com/DIMFLIX-Hackathons/PixelGAN",
         repo: "DIMFLIX-Hackathons/PixelGAN"
     },
-    {
-        src: require("@/assets/projects/defectSenseAI.png"), 
-        title: "portfolio.defectSenseAI.title",
-        description: "portfolio.defectSenseAI.description",
-        link: "https://github.com/DIMFLIX",
-        repo: null // No specific repo
+	{
+        src: require("@/assets/projects/spectrum-security.png"), 
+        title: 'portfolio.spectrumSecurity.title',
+        description: 'portfolio.spectrumSecurity.description',
+        link: "https://github.com/DIMFLIX/Spectrum-Security",
+        repo: "DIMFLIX/Spectrum-Security"
     },
     {
         src: require("@/assets/projects/terraWing.png"), 
@@ -40,15 +47,15 @@ const projectsList = ref([
         src: require("@/assets/projects/pyTypingCourse.png"), 
         title: "portfolio.pyTypingCourse.title",
         description: "portfolio.pyTypingCourse.description",
-        link: "https://github.com/DIMFLIX/PyTypingCourse",
-        repo: "DIMFLIX/PyTypingCourse"
+        link: "https://github.com//DIMFLIX/PyTyping-Course",
+        repo: "/DIMFLIX/PyTyping-Course"
     },
-    {
-        src: require("@/assets/projects/spectrum-security.png"), 
-        title: 'portfolio.spectrumSecurity.title',
-        description: 'portfolio.spectrumSecurity.description',
-        link: "https://github.com/DIMFLIX/Spectrum-Security",
-        repo: "DIMFLIX/Spectrum-Security"
+	{
+        src: require("@/assets/projects/defectSenseAI.png"), 
+        title: "portfolio.defectSenseAI.title",
+        description: "portfolio.defectSenseAI.description",
+        link: "https://github.com/DIMFLIX-Hackathons/DefectSenseAI",
+        repo: "DIMFLIX-Hackathons/DefectSenseAI"
     },
 ])
 
@@ -211,61 +218,69 @@ const openLink = (link) => {
   window.open(link, '_blank')
 }
 
-const hoverStates = ref({});
 </script>
 
 <template>
 	<div class="page">
+		
 		<div class="content-wrapper">
-			<div class="portfolio-grid" :class="{ 'with-readme': selectedProject !== null }">
+			<div class="portfolio-grid" :class="{ 
+				'with-readme': selectedProject !== null
+			}">
 				<div 
 					class="box" 
 					v-for="(p, index) in projectsList"
 					:key="index"
 					:class="{ 'selected': selectedProject === index }"
 					@click="selectProject(p, index)"
-					@mouseenter="hoverStates[index] = true"
-					@mouseleave="hoverStates[index] = false"
 				>
 					<img :src="p.src" :alt="t(p.title)">
-					<transition name="fade">
-						<div v-show="hoverStates[index] || selectedProject === index" class="overlay">
-							<transition-group name="list">
-								<h3 class="title" key="title">
-									{{ t(p.title) }}
-								</h3>
-								<p class="description" key="desc">
-									{{ t(p.description) }}
-								</p>
-								<div class="actions" key="actions">
-									<button 
-										@click.stop="openLink(p.link)" 
-										class="github-link"
-										title="Open in GitHub"
-									>
-										<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-											<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-										</svg>
-									</button>
-								</div>
-							</transition-group>
+					<div class="overlay">
+						<h3 class="title">
+							{{ t(p.title) }}
+						</h3>
+						<p class="description">
+							{{ t(p.description) }}
+						</p>
+						<div class="actions">
+							<button 
+								@click.stop="openLink(p.link)" 
+								class="github-link"
+								title="Open in GitHub"
+							>
+								<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+									<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+								</svg>
+							</button>
 						</div>
-					</transition>
+					</div>
 				</div>
 			</div>
 			
 			<!-- README Panel -->
 			<transition name="slide">
 				<div v-if="selectedProject !== null" class="readme-panel">
-					<div class="readme-header">
-						<h2>{{ t(projectsList[selectedProject].title) }}</h2>
-						<button @click="closeReadme" class="close-btn">
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								<line x1="18" y1="6" x2="6" y2="18"></line>
-								<line x1="6" y1="6" x2="18" y2="18"></line>
+				<div class="readme-header">
+					<div class="header-left">
+						<button 
+							v-if="projectsList[selectedProject].link" 
+							@click.stop="openLink(projectsList[selectedProject].link)" 
+							class="github-btn"
+							title="Open on GitHub"
+						>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
 							</svg>
 						</button>
+						<h2>{{ t(projectsList[selectedProject].title) }}</h2>
 					</div>
+					<button @click="closeReadme" class="close-btn">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<line x1="18" y1="6" x2="6" y2="18"></line>
+							<line x1="6" y1="6" x2="18" y2="18"></line>
+						</svg>
+					</button>
+				</div>
 					<div class="readme-content">
 						<div v-if="loadingReadme" class="loading">
 							<div class="spinner"></div>
@@ -303,11 +318,14 @@ const hoverStates = ref({});
 
 .content-wrapper {
 	width: 100%;
-	height: 100%;
+	height: calc(100vh - 120px); // Фиксированная высота с учётом padding'ов
 	display: flex;
 	gap: 2rem;
-	max-width: 1600px;
+	max-width: 1800px; // Увеличиваю для лучшего использования пространства
 	margin: 0 auto;
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	position: relative;
+	justify-content: center; // Лучшее центрирование контента
 	
 	@media (max-width: 1024px) {
 		gap: 1.5rem;
@@ -321,45 +339,109 @@ const hoverStates = ref({});
 .portfolio-grid {
 	flex: 1;
 	display: grid;
-	grid-template-columns: repeat(3, minmax(300px, 400px));
+	grid-template-columns: repeat(3, minmax(350px, 450px));
+	grid-auto-rows: minmax(min-content, max-content); // Автоматическая высота строк
 	justify-content: center;
-	align-content: center;
-	gap: 2rem;
+	align-content: start;
+	gap: 2.5rem !important; // Принудительно задаём отступы между всеми элементами
 	padding: 2rem;
 	overflow-y: auto;
-	transition: all 0.3s ease;
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 	
 	&.with-readme {
-		grid-template-columns: repeat(2, minmax(260px, 320px));
-		gap: 1.5rem;
+		// ПОЛНОСТЬЮ ПЕРЕДЕЛЫВАЕМ КОНТЕЙНЕР ДЛЯ НОРМАЛЬНОГО СКРОЛЛА
+		display: block !important; // ОБЫЧНЫЙ BLOCK вместо flex
+		width: 100% !important;
+		max-width: 380px !important; // Уменьшаю ширину для лучшего баланса с README
+		height: 100% !important; // Полная высота родителя
+		overflow-y: scroll !important; // ПРИНУДИТЕЛЬНО scroll вместо auto
+		overflow-x: hidden !important;
+		padding: 1rem !important;
+		
+		.box {
+			// Обычные блочные элементы один под другим
+			display: block !important;
+			width: 100% !important; // Полная ширина контейнера
+			max-width: 450px !important; // Максимальная ширина
+			height: auto !important; // Автоматическая высота
+			aspect-ratio: 16/10 !important; // Пропорции
+			margin: 0 auto 2.5rem auto !important; // Центрируем и отступ снизу
+			position: static !important;
+			z-index: auto !important;
+			transform: none !important;
+			float: none !important;
+			
+			&:last-child {
+				margin-bottom: 0 !important; // Последняя без отступа
+			}
+		}
+		
+		// Красивый скроллбар для списка карточек
+		&::-webkit-scrollbar {
+			width: 8px;
+		}
+		
+		&::-webkit-scrollbar-track {
+			background: rgba(128, 128, 128, 0.1);
+			border-radius: 4px;
+		}
+		
+		&::-webkit-scrollbar-thumb {
+			background: rgba(128, 128, 128, 0.3);
+			border-radius: 4px;
+			
+			&:hover {
+				background: rgba(128, 128, 128, 0.5);
+			}
+		}
 	}
 
     // Для планшетов
     @media (max-width: 1024px) {
         grid-template-columns: repeat(2, minmax(200px, 280px));
-        gap: 1.5rem;
+        gap: 1.5rem !important;
         padding: 1.5rem;
-        
-        &.with-readme {
-			grid-template-columns: repeat(2, minmax(180px, 240px));
-		}
     }
 
-    // Для мобильных
+    // Мобильная версия - ПОЛНАЯ КОПИЯ КОДА ИЗ with-readme НА ПК!
     @media (max-width: 768px) {
-        grid-template-columns: repeat(2, minmax(140px, 1fr));
-        gap: 1rem;
-        padding: 1rem;
+        // КОПИРУЮ КОД ИЗ &.with-readme НА ПК
+        display: block !important;
+        width: 100% !important;
+        max-width: 500px !important;
+        height: 100% !important;
+        overflow-y: scroll !important;
+        overflow-x: hidden !important;
+        padding: 1rem !important;
         
+        .box {
+            // КОПИРУЮ ТОЧНО КОД ИЗ &.with-readme .box НА ПК
+            display: block !important;
+            width: 100% !important;
+            max-width: 450px !important;
+            height: auto !important;
+            aspect-ratio: 16/10 !important;
+            margin: 0 auto 2.5rem auto !important; // КОПИРУЮ ОТСТУПЫ КАК НА ПК
+            position: static !important;
+            z-index: auto !important;
+            transform: none !important;
+            float: none !important;
+            
+            &:last-child {
+                margin-bottom: 0 !important;
+            }
+        }
+
         &.with-readme {
-			display: none; // Скрываем плитки когда открыт README на мобильных
+			// НА МОБИЛЬНЫХ СКРЫВАЕМ ПЛИТКИ - README НА ВЕСЬ ЭКРАН!
+			display: none !important; // Прячем плитки как было раньше
 		}
     }
     
     // Для очень маленьких экранов
     @media (max-width: 480px) {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 1rem !important;
         padding: 0.75rem;
     }
 
@@ -372,15 +454,38 @@ const hoverStates = ref({});
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
         aspect-ratio: 16/10;
+        width: 100%; // Плитка занимает всю ширину ячейки grid
+        height: auto; // Автоматическая высота на основе aspect-ratio
+        
+        // Не трогаем margin чтобы grid gap работал
+        transform: none !important;
+        z-index: 1;
+        
+        // НА МОБИЛЬНЫХ - ТОЛЬКО ОТСТУПЫ, НИКАКИХ ПАДДИНГОВ И ГРАНИЦ
+        @media screen and (max-width: 768px) {
+            margin: 0 auto 2.5rem auto !important;
+        }
         
         &:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); // Уменьшил тень
+            transform: translateY(-2px) scale(1.02) !important;
+            z-index: 50;
+            position: relative;
         }
         
         &.selected {
-        	box-shadow: 0 0 0 3px var(--accent-color, #4a9eff);
-        	transform: scale(1.05);
+            z-index: 100;
+            box-shadow: 
+                0 0 0 3px var(--accent-color, #4a9eff),
+                0 8px 20px rgba(0, 0, 0, 0.25); // Уменьшил тень и интенсивность
+            transform: scale(1.05) !important;
+            position: relative;
+        }
+        
+        // ЭТОТ БЛОК ПЕРЕБИВАЛ ОТСТУПЫ! УДАЛЯЮ!
+        
+        @media (max-width: 480px) {
+            max-width: 350px; // Немного меньше для маленьких экранов
         }
         
         img {
@@ -409,6 +514,18 @@ const hoverStates = ref({});
     align-items: center;
     text-align: center;
     padding: 2rem 1.5rem;
+    
+    // По умолчанию оверлей скрыт
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+// Показываем оверлей при hover или selected
+.portfolio-grid .box:hover .overlay,
+.portfolio-grid .box.selected .overlay {
+    opacity: 1;
+    pointer-events: auto;
     
     @media (max-width: 768px) {
         padding: 1rem;
@@ -445,38 +562,35 @@ const hoverStates = ref({});
 
 /* README Panel Styles */
 .readme-panel {
-	width: 55%;
-	max-width: 900px;
-	height: 90%;
-	max-height: 90vh;
+	width: 70%; // Увеличиваю ширину для лучшего использования пространства
+	max-width: 1200px; // Увеличиваю максимальную ширину
+	height: 95%;
+	max-height: 95vh;
 	background: var(--bg-color);
 	border: 1px solid rgba(128, 128, 128, 0.2);
 	border-radius: 20px;
 	display: flex;
 	flex-direction: column;
-	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
 	overflow: hidden;
-	margin-right: 50px;
-	margin-left: 2rem;
+	margin: 0 auto; // Центрирую панель
+	transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 	
 	@media (max-width: 1400px) {
-		width: 50%;
-		margin-right: 30px;
+		width: 65%;
 	}
 	
 	@media (max-width: 1024px) {
-		width: 55%;
-		margin-right: 20px;
-		margin-left: 1.5rem;
+		width: 62%;
 	}
 	
 	@media (max-width: 768px) {
 		position: fixed;
-		left: 0;
+		left: 0 !important; // НА ВЕСЬ ЭКРАН КАК БЫЛО
 		right: 0;
 		top: 0;
 		bottom: 0;
-		width: 100%;
+		width: 100% !important; // ПОЛНОЭКРАННЫЙ README
 		height: 100vh;
 		max-height: 100vh;
 		max-width: 100%;
@@ -504,17 +618,57 @@ const hoverStates = ref({});
 		z-index: 10;
 	}
 	
-	h2 {
-		margin: 0;
-		font-size: 1.5rem;
+	.header-left {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex: 1;
+		min-width: 0; // Для правильного ellipsis
+		
+		h2 {
+			margin: 0;
+			font-size: 1.5rem;
+			color: var(--text-color);
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			flex: 1;
+			min-width: 0;
+			
+			@media (max-width: 768px) {
+				font-size: 1.25rem;
+			}
+		}
+	}
+	
+	.github-btn {
+		background: rgba(128, 128, 128, 0.1);
+		border: 1px solid rgba(128, 128, 128, 0.2);
 		color: var(--text-color);
-		max-width: 85%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		padding: 0.5rem;
+		border-radius: 0.5rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		
+		&:hover {
+			background: rgba(128, 128, 128, 0.2);
+			border-color: var(--accent-color, #4a9eff);
+			color: var(--accent-color, #4a9eff);
+			transform: scale(1.05);
+		}
 		
 		@media (max-width: 768px) {
-			font-size: 1.25rem;
+			padding: 0.6rem;
+			background: rgba(128, 128, 128, 0.15);
+			
+			svg {
+				width: 22px;
+				height: 22px;
+			}
 		}
 	}
 }
@@ -597,6 +751,50 @@ const hoverStates = ref({});
 
 @keyframes spin {
 	to { transform: rotate(360deg); }
+}
+
+
+/* Индикатор прогресса для мобильных */
+.mobile-progress {
+	position: fixed;
+	top: 20px;
+	left: 20px;
+	right: 20px;
+	z-index: 1000;
+	background: rgba(0, 0, 0, 0.7);
+	backdrop-filter: blur(10px);
+	border-radius: 12px;
+	padding: 12px 16px;
+	color: white;
+	font-size: 14px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+	
+	@media (min-width: 769px) {
+		display: none;
+	}
+}
+
+.progress-bar {
+	width: 100%;
+	height: 4px;
+	background: rgba(255, 255, 255, 0.2);
+	border-radius: 2px;
+	overflow: hidden;
+	margin-bottom: 8px;
+}
+
+.progress-fill {
+	height: 100%;
+	background: linear-gradient(90deg, var(--accent-color, #4a9eff), #00d4ff);
+	border-radius: 2px;
+	transition: width 0.3s ease;
+	box-shadow: 0 0 10px rgba(74, 158, 255, 0.5);
+}
+
+.progress-text {
+	font-weight: 500;
+	text-align: center;
+	opacity: 0.9;
 }
 
 /* Markdown content styles */
@@ -963,9 +1161,13 @@ const hoverStates = ref({});
 }
 
 /* Slide animation for README panel */
-.slide-enter-active,
+.slide-enter-active {
+	transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .slide-leave-active {
-	transition: transform 0.3s ease, opacity 0.3s ease;
+	transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+	// Синхронизируем с анимацией grid для плавного закрытия
 }
 
 .slide-enter-from {
