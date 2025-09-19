@@ -26,16 +26,14 @@ async function copy(addr: string, key: string) {
 
     <div class="wallets">
       <div v-for="w in wallets" :key="w.key" class="wallet">
-        <div class="hdr">
-          <span class="name">{{ w.label }}</span>
-          <button type="button" class="copy" @click="copy(w.address, w.key)">
-            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-              <path fill="currentColor" d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
-            </svg>
-            <span class="copy-text">{{ copied[w.key] ? t('sponsor.copied') : t('sponsor.copy') }}</span>
-          </button>
-        </div>
+        <span class="name">{{ w.label }}</span>
         <code class="addr" :title="w.address">{{ w.address }}</code>
+        <button type="button" class="copy" @click="copy(w.address, w.key)">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path fill="currentColor" d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
+          </svg>
+          <span class="copy-text">{{ copied[w.key] ? t('sponsor.copied') : t('sponsor.copy') }}</span>
+        </button>
       </div>
     </div>
 
@@ -71,24 +69,34 @@ async function copy(addr: string, key: string) {
   background: var(--sbg2-color);
   border-radius: 12px;
   padding: 12px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'name'
+    'addr'
+    'copy';
   gap: 8px;
 }
 
-.hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+/* Desktop/tablet layout: put copy on the same row as the name */
+@media (min-width: 426px) {
+  .wallet {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'name copy'
+      'addr addr';
+    align-items: start;
+  }
 }
 
 .name {
+  grid-area: name;
   font-family: 'PressStart2P', sans-serif;
   font-size: 12px;
 }
 
 .copy {
+  grid-area: copy;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -99,12 +107,23 @@ async function copy(addr: string, key: string) {
   border-radius: 10px;
   cursor: pointer;
   transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
+  justify-self: end;
 }
 .copy:hover { box-shadow: 0 6px 16px rgba(0,0,0,0.25); }
 .copy:active { transform: translateY(1px); }
 .copy-text { font-family: 'Aldrich', sans-serif; font-size: 12px; }
 
+/* On very small screens, make the button full-width below the address */
+@media (max-width: 425px) {
+  .copy {
+    width: 100%;
+    justify-content: center;
+    justify-self: stretch;
+  }
+}
+
 .addr {
+  grid-area: addr;
   display: block;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 12px;
@@ -115,6 +134,14 @@ async function copy(addr: string, key: string) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Improve address readability and prevent overflow on tiny screens */
+@media (max-width: 425px) {
+  .addr {
+    white-space: normal;
+    word-break: break-all;
+  }
 }
 
 .note .muted { opacity: .8; font-size: 12px; margin: 0; }

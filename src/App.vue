@@ -5,17 +5,26 @@ import SunIcon from '@/components/icons/SunIcon.vue';
 import MoonIcon from '@/components/icons/MoonIcon.vue';
 import HomeIcon from './components/icons/HomeIcon.vue';
 import TranslateIcon from '@/components/icons/TranslateIcon.vue';
+import HeartIcon from '@/components/icons/HeartIcon.vue';
+import SponsorUs from '@/components/SponsorUs.vue';
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
 const isDarkTheme = ref(false);
 const isMenuOpen = ref(false);
+const isSponsorOpen = ref(false);
 const { t, locale } = useI18n();
 
 const toggleMenu = () => {
 	isMenuOpen.value = !isMenuOpen.value;
 };
+
+const openSponsor = () => {
+  isSponsorOpen.value = true;
+  isMenuOpen.value = false;
+};
+const closeSponsor = () => { isSponsorOpen.value = false };
 
 const changeLanguage = () => {
 	let new_lang = "en"
@@ -53,6 +62,9 @@ onMounted(() => {
 			<button class="pill-btn" @click="router.push('/')" title="Home">
 				<HomeIcon class="icon"/>
 			</button>
+			<button class="pill-btn" @click="openSponsor" :title="t('sponsor.title')">
+				<HeartIcon class="icon" />
+			</button>
 			<button class="pill-btn" @click="changeLanguage" title="Language">
 				<TranslateIcon class="icon"/>
 				<span class="lang-badge">{{ locale.toUpperCase() }}</span>
@@ -79,6 +91,9 @@ onMounted(() => {
 
 			<!-- Выдвижные кнопки меню -->
 			<div :class="['menu-items', { 'open': isMenuOpen }]">
+				<button class="menu-btn" @click="openSponsor" :title="t('sponsor.title')">
+					<HeartIcon class="icon"/>
+				</button>
 				<button class="menu-btn" @click="router.push('/')" title="Home">
 					<HomeIcon class="icon"/>
 				</button>
@@ -90,6 +105,19 @@ onMounted(() => {
 					<MoonIcon class="icon" v-if="isDarkTheme"/>
 					<SunIcon class="icon" v-else/>
 				</button>
+			</div>
+		</div>
+
+		<!-- Sponsor Modal -->
+		<div v-if="isSponsorOpen" class="modal-mask" @click.self="closeSponsor">
+			<div class="modal">
+				<div class="modal-header">
+					<h3 class="modal-title">{{ t('sponsor.title') }}</h3>
+					<button class="modal-close" @click="closeSponsor">✕</button>
+				</div>
+				<div class="modal-body">
+					<SponsorUs />
+				</div>
 			</div>
 		</div>
 		
@@ -227,6 +255,42 @@ body {
 	}
 }
 
+// Стили для модального окна спонсорства
+.modal-mask {
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: rgba(0,0,0,0.4);
+	backdrop-filter: blur(2px);
+	z-index: 1000; /* above fab/pill */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	box-sizing: border-box;
+}
+.modal {
+	width: min(800px, 100%);
+	background: var(--sbg1-color);
+	border-radius: 14px;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+	border: 1px solid rgba(0,0,0,0.1);
+	padding: 16px;
+	color: var(--text-color);
+}
+.modal-header {
+	display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px;
+}
+.modal-title { margin: 0; font-size: 18px; color: var(--text-color); }
+.modal-close {
+	background: var(--button-color);
+	color: var(--button-text-color);
+	border: 1px solid var(--button-color);
+	border-radius: 8px;
+	padding: 6px 10px;
+	cursor: pointer;
+}
+.modal-body { padding-top: 8px; }
+
 // Стили для FAB меню (мобильные)
 .fab-menu {
 	position: fixed;
@@ -329,19 +393,20 @@ body {
 		pointer-events: none;
 		opacity: 0;
 
-		&.open {
-			pointer-events: auto;
-			opacity: 1;
+				&.open {
+					pointer-events: auto;
+					opacity: 1;
 
-			.menu-btn {
-				transform: translateX(0) scale(1);
-				opacity: 1;
+					.menu-btn {
+						transform: translateX(0) scale(1);
+						opacity: 1;
 
-				&:nth-child(1) { transition-delay: 0.05s; }
-				&:nth-child(2) { transition-delay: 0.1s; }
-				&:nth-child(3) { transition-delay: 0.15s; }
-			}
-		}
+						&:nth-child(1) { transition-delay: 0.05s; }
+						&:nth-child(2) { transition-delay: 0.1s; }
+						&:nth-child(3) { transition-delay: 0.15s; }
+						&:nth-child(4) { transition-delay: 0.2s; }
+					}
+				}
 
 			.menu-btn {
 				position: relative;

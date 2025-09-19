@@ -321,6 +321,19 @@ const carouselConfig = ref({
   .card-footer .date { white-space: nowrap; }
 }
 
+/* Mobile-friendly header layout for very small screens */
+@media (max-width: 480px) {
+  .review-card { height: 300px; }
+  .card-header { justify-content: center; }
+  .author { flex-direction: column; align-items: center; gap: 8px; }
+  .avatar { width: 64px; height: 64px; }
+  .meta { align-items: center; text-align: center; }
+  .username { padding-left: 0; text-align: center; font-size: 1.1rem; word-break: break-word; }
+
+  .card-footer { flex-direction: column; align-items: center; gap: 6px; }
+  .card-footer .date { white-space: normal; font-size: 0.9rem; text-align: center; }
+}
+
 // --- Leave Review Form ---
 .leave-review-box {
   border-radius: 14px;
