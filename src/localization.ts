@@ -84,6 +84,28 @@ export const messages = {
         readMore: "Read more",
         published: "Published",
         updated: "Updated"
+      },
+      reviews: {
+        title: "Reviews",
+        leave: "Leave a review",
+        closeForm: "Close form",
+        yourRating: "Your rating",
+        yourText: "Your review",
+        textPlaceholder: "Tell others about your experience...",
+        yourNameOptional: "Your name (optional)",
+        namePlaceholder: "Company or person name",
+        submitOnGithub: "Submit on GitHub",
+        submit: "Submit",
+        reviews: "reviews",
+        opensInNewTab: "A new Discussion will open in a new tab.",
+        openHere: "Open here",
+        copyLink: "Copy link",
+        showMore: "Show more",
+        showLess: "Show less",
+        noReviews: "No reviews yet",
+        loading: "Loading reviews...",
+        loadError: "Failed to load reviews",
+        titleForDiscussion: "Review"
       }
     },
     ru: {
@@ -171,6 +193,28 @@ export const messages = {
         readMore: "Подробнее",
         published: "Опубликовано",
         updated: "Обновлено"
+      },
+      reviews: {
+        title: "Отзывы",
+        leave: "Оставить отзыв",
+        closeForm: "Закрыть форму",
+        yourRating: "Ваша оценка",
+        yourText: "Ваш отзыв",
+        textPlaceholder: "Поделитесь вашим опытом...",
+        yourNameOptional: "Ваше имя (необязательно)",
+        namePlaceholder: "Название компании или ваше имя",
+        submitOnGithub: "Отправить на GitHub",
+        submit: "Отправить",
+        reviews: "отзывов",
+        opensInNewTab: "Откроется новая Дискуссия в новой вкладке.",
+        openHere: "Открыть здесь",
+        copyLink: "Скопировать ссылку",
+        showMore: "Показать больше",
+        showLess: "Свернуть",
+        noReviews: "Пока нет отзывов",
+        loading: "Загрузка отзывов...",
+        loadError: "Не удалось загрузить отзывы",
+        titleForDiscussion: "Отзыв"
       }
     }
   }

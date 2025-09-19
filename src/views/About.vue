@@ -36,9 +36,24 @@ import Selenium from '@/components/icons/tech-stack/Selenium.vue';
 import Aiohttp from '@/components/icons/tech-stack/Aiohttp.vue';
 import Ngrok from '@/components/icons/tech-stack/Ngrok.vue';
 import Flask from '@/components/icons/tech-stack/Flask.vue';
+import ReviewsSection from '@/components/ReviewsSection.vue'
+import LeaveReviewForm from '@/components/LeaveReviewForm.vue'
 
 const { t, locale } = useI18n();
 const screenSize = ref(0);
+const reviewsBoxRef = ref(null);
+
+const updateReviewsTitleMetrics = () => {
+    const box = reviewsBoxRef.value;
+    if (!box) return;
+    const titleEl = box.querySelector('.box-title');
+    if (titleEl) {
+        const width = titleEl.offsetWidth;
+        const left = titleEl.offsetLeft;
+        box.style.setProperty('--box-title-width', width + 'px');
+        box.style.setProperty('--box-title-left', left + 'px');
+    }
+};
 
 // Вычисление лет опыта от 13 мая 2021 года
 const calculateExperience = () => {
@@ -163,11 +178,14 @@ const updateScreenSize = () => {
 
 onMounted(() => {
     updateScreenSize();
+    updateReviewsTitleMetrics();
     window.addEventListener('resize', updateScreenSize);
+    window.addEventListener('resize', updateReviewsTitleMetrics);
 });
 
 onBeforeUnmount(() => {
     window.removeEventListener('resize', updateScreenSize);
+    window.removeEventListener('resize', updateReviewsTitleMetrics);
 });
 </script>
 
@@ -198,6 +216,15 @@ onBeforeUnmount(() => {
 					<p class="label" v-html="t('about.aboutme.stats.hackathons')"></p>
 				</div>
 			</div>
+
+		</div>
+		<!-- Reviews box inserted here -->
+		<div class="box" ref="reviewsBoxRef">
+			<div class="box-title"><p v-html="t('reviews.title')"></p></div>
+			<ReviewsSection />
+		</div>
+		<div class="box reviews-form-box">
+			<LeaveReviewForm />
 		</div>
 		<div class="box">
 			<div class="box-title"><p v-html="t('about.techStack.title')"></p></div>
@@ -691,6 +718,23 @@ onBeforeUnmount(() => {
 			height: 70px !important;
 		}
 	}
+}
+
+.reviews-form-box {
+	margin-top: -80px; /* pull form closer to reviews */
+	padding: 20px;
+}
+
+@media screen and (max-width: 1024px) {
+	.reviews-form-box { margin-top: -40px; }
+}
+
+@media screen and (max-width: 768px) {
+	.reviews-form-box { margin-top: -30px; }
+}
+
+@media screen and (max-width: 489px) {
+	.reviews-form-box { margin-top: -10px; }
 }
 
 </style>
