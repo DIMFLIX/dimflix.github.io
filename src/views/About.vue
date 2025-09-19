@@ -38,6 +38,7 @@ import Ngrok from '@/components/icons/tech-stack/Ngrok.vue';
 import Flask from '@/components/icons/tech-stack/Flask.vue';
 import ReviewsSection from '@/components/ReviewsSection.vue'
 import LeaveReviewForm from '@/components/LeaveReviewForm.vue'
+import SponsorUs from '@/components/SponsorUs.vue'
 
 const { t, locale } = useI18n();
 const screenSize = ref(0);
@@ -222,43 +223,47 @@ onBeforeUnmount(() => {
 		<div class="box" ref="reviewsBoxRef">
 			<div class="box-title"><p v-html="t('reviews.title')"></p></div>
 			<ReviewsSection />
-		</div>
-		<div class="box reviews-form-box">
-			<LeaveReviewForm />
-		</div>
-		<div class="box">
-			<div class="box-title"><p v-html="t('about.techStack.title')"></p></div>
-			<vue-marquee-slider id="carousel1" :speed="15000" :space="80">
-				<Python/>
-				<Java/>
-				<Rust/>
-				<Html/>
-				<Css/>
-				<Js/>
-				<Ts/>
-				<Vue/>
-				<Postgresql/>
-				<Qt/>
-				<Tauri/>
-				<Aiogram/>
-				<Pyrogram/>
-			</vue-marquee-slider>
-			<vue-marquee-slider id="carousel2" :speed="15000":space="80" reverse>
-				<FastAPI/>
-				<Django/>
-				<Flask/>
-				<Aiohttp/>
-				<Selenium/>
-				<Ionic/>
-				<Capacitor/>
-				<MongoDB/>
-				<MySQL/>
-				<Docker/>
-				<Nginx/>
-				<Ngrok/>
-			</vue-marquee-slider>
-		</div>
-		<div class="box box-imgs" v-if="patentsList.length > 0">
+        </div>
+        <div class="box reviews-form-box">
+            <LeaveReviewForm />
+        </div>
+        <div class="box">
+            <div class="box-title"><p v-html="t('sponsor.title')"></p></div>
+            <SponsorUs />
+        </div>
+        <div class="box">
+            <div class="box-title"><p v-html="t('about.techStack.title')"></p></div>
+            <vue-marquee-slider id="carousel1" :speed="15000" :space="80">
+                <Python/>
+                <Java/>
+                <Rust/>
+                <Html/>
+                <Css/>
+                <Js/>
+                <Ts/>
+                <Vue/>
+                <Postgresql/>
+                <Qt/>
+                <Tauri/>
+                <Aiogram/>
+                <Pyrogram/>
+            </vue-marquee-slider>
+            <vue-marquee-slider id="carousel2" :speed="15000":space="80" reverse>
+                <FastAPI/>
+                <Django/>
+                <Flask/>
+                <Aiohttp/>
+                <Selenium/>
+                <Ionic/>
+                <Capacitor/>
+                <MongoDB/>
+                <MySQL/>
+                <Docker/>
+                <Nginx/>
+                <Ngrok/>
+            </vue-marquee-slider>
+        </div>
+        <div class="box box-imgs" v-if="patentsList.length > 0">
 			<div class="box-title">
 				<p v-html="t('about.patents.title')"></p>
 			</div>

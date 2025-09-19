@@ -3,6 +3,13 @@ export const messages = {
       notDone: {
         title: "This page is under<br/>development"
       },
+      sponsor: {
+        title: "Support the author",
+        intro: "If my work helps you and you'd like to support it, you can use any wallet below.",
+        copy: "Copy",
+        copied: "Copied!",
+        notice: "Thank you for your support — it helps me create more quality content and open-source."
+      },
       home: {
         title: "Make your<br/>business better",
         description: "Hi! I'm a full-stack programmer with extensive experience and deep knowledge in all aspects of development.",
@@ -111,6 +118,13 @@ export const messages = {
     ru: {
       notDone: {
         title: "Эта страница находится на<br/>стадии разработки"
+      },
+      sponsor: {
+        title: "Поддержать автора",
+        intro: "Если вам не безразлична моя работа и вы хотите поддержать её — воспользуйтесь любым удобным кошельком ниже.",
+        copy: "Скопировать",
+        copied: "Скопировано!",
+        notice: "Спасибо за поддержку — это помогает мне делать больше качественного контента и open-source."
       },
       home: {
         title: "Сделай cвой<br/>бизнес лучше",
