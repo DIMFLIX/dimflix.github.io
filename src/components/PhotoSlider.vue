@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
+import MultiPageImage from '@/components/primevue/MultiPageImage.vue';
 
 interface Props {
   photos: string[];
@@ -7,23 +8,59 @@ interface Props {
   showFrame?: boolean;
   showIndicators?: boolean;
   altTexts?: string[];
+  enablePreview?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   interval: 3000,
   showFrame: true,
   showIndicators: true,
-  altTexts: () => []
+  altTexts: () => [],
+  enablePreview: true,
 });
 
 const currentPhotoIndex = ref(0);
 let photoInterval: number | null = null;
+const isPreviewOpen = ref(false);
+const multiPageImageRef = ref<any>(null);
+
+const currentPhoto = () => props.photos[currentPhotoIndex.value]
+const currentAlt = () => (props.altTexts && props.altTexts[currentPhotoIndex.value]) ? props.altTexts[currentPhotoIndex.value] : `Photo ${currentPhotoIndex.value + 1}`
+
+function openPreview() {
+  if (multiPageImageRef.value) {
+    // Устанавливаем текущую страницу в MultiPageImage
+    if (multiPageImageRef.value.currentPage !== undefined) {
+      multiPageImageRef.value.currentPage = currentPhotoIndex.value;
+    }
+    
+    // Находим кнопку preview
+    const previewButton = multiPageImageRef.value.$el?.querySelector('.p-image-preview-indicator') ||
+                         multiPageImageRef.value.$el?.querySelector('button');
+    
+    if (previewButton) {
+      previewButton.click();
+    }
+  }
+}
+
+// Обработчик смены страницы в preview
+function onPreviewPageChange(newPageIndex: number) {
+  // Синхронизируем основной слайдер с preview
+  currentPhotoIndex.value = newPageIndex;
+  
+  // Перезапускаем интервал, когда preview закрыт
+  if (!isPreviewOpen.value) {
+    startInterval();
+  }
+}
 
 const changePhoto = () => {
   currentPhotoIndex.value = (currentPhotoIndex.value + 1) % props.photos.length;
 };
 
 const startInterval = () => {
+  if (isPreviewOpen.value) return; // do not auto-rotate while preview is open
   if (photoInterval) clearInterval(photoInterval);
   photoInterval = setInterval(changePhoto, props.interval);
 };
@@ -35,16 +72,28 @@ const goToPhoto = (index: number) => {
 
 const handlePrev = () => {
   currentPhotoIndex.value = (currentPhotoIndex.value - 1 + props.photos.length) % props.photos.length;
-  startInterval();
+  if (!isPreviewOpen.value) startInterval();
 };
 
 const handleNext = () => {
   currentPhotoIndex.value = (currentPhotoIndex.value + 1) % props.photos.length;
-  startInterval();
+  if (!isPreviewOpen.value) startInterval();
 };
+
 
 onMounted(() => {
   startInterval();
+});
+
+watch(isPreviewOpen, (open) => {
+  if (open) {
+    if (photoInterval) {
+      clearInterval(photoInterval);
+      photoInterval = null;
+    }
+  } else {
+    startInterval();
+  }
 });
 
 onUnmounted(() => {
@@ -72,6 +121,8 @@ onUnmounted(() => {
             preserveAspectRatio="xMidYMid slice"
             :class="{ active: currentPhotoIndex === index }"
           />
+          <!-- Transparent clickable rect clipped to the same frame -->
+<rect x="0" y="0" width="100%" height="100%" fill="transparent" @click.stop="enablePreview && openPreview()" />
         </g>
       </svg>
       
@@ -86,13 +137,14 @@ onUnmounted(() => {
         />
       </div>
 
+
       <!-- Navigation arrows -->
-      <button v-if="photos.length > 1" class="nav-arrow prev" @click="handlePrev">
+      <button v-if="photos.length > 1" class="nav-arrow prev" @click.stop="handlePrev">
         <svg viewBox="0 0 24 24" width="24" height="24">
           <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
         </svg>
       </button>
-      <button v-if="photos.length > 1" class="nav-arrow next" @click="handleNext">
+      <button v-if="photos.length > 1" class="nav-arrow next" @click.stop="handleNext">
         <svg viewBox="0 0 24 24" width="24" height="24">
           <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
         </svg>
@@ -104,7 +156,7 @@ onUnmounted(() => {
           v-for="(_, index) in photos" 
           :key="index"
           class="progress-track"
-          @click="goToPhoto(index)"
+          @click.stop="goToPhoto(index)"
         >
           <div 
             class="progress-bar" 
@@ -114,10 +166,73 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- MultiPageImage for preview functionality -->
+    <MultiPageImage
+      v-if="enablePreview"
+      :pages="props.photos"
+      :src="currentPhoto()"
+      :alt="currentAlt()"
+      preview
+      @show="isPreviewOpen = true"
+      @hide="isPreviewOpen = false"
+      @page-change="onPreviewPageChange"
+      ref="multiPageImageRef"
+      class="preview-image"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
+/* Use PrimeVue Image default preview styles (same as About) */
+
+/* Round corners of image inside modal - improved */
+:deep(.p-image-preview-mask) { border-radius: 15px !important; }
+:deep(.p-image-preview) img { border-radius: 15px !important; }
+:deep(.p-image-preview-container img) { border-radius: 15px !important; }
+:deep(.p-image-preview-content img) { border-radius: 15px !important; }
+:deep(.p-image-original) { border-radius: 15px !important; }
+:deep(.p-image img) { border-radius: 15px !important; }
+
+.photo-click-area {
+  position: absolute;
+  inset: 0;
+  z-index: 4; /* below arrows (10) and indicators (5), above image */
+  cursor: pointer;
+}
+
+.preview-image {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 3;
+
+  &::before {
+    content: '🔍';
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+}
+
 .photo-slider {
   --slider-width: 100%;
   --slider-max-width: 468px;
@@ -156,6 +271,10 @@ onUnmounted(() => {
         opacity: 1;
       }
     }
+
+    &:hover .hover-overlay {
+      opacity: 1;
+    }
   }
 
   .simple-photo {
@@ -179,6 +298,27 @@ onUnmounted(() => {
         opacity: 1;
       }
     }
+
+    &:hover .hover-overlay {
+      opacity: 1;
+    }
+  }
+
+/* removed zoom-button */ .zoom-button { display: none; 
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0,0,0,0.35);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 11;
   }
 
   .nav-arrow {
@@ -261,5 +401,6 @@ onUnmounted(() => {
     height: 28px;
     opacity: 1;
   }
+/* removed custom preview mask in favor of PrimeVue MultiPageImage */
 }
 </style>

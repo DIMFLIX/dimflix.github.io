@@ -5,6 +5,7 @@ import router from "./router";
 import store from "./store";
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import Image from 'primevue/image';
 import i18n from './i18n'
 
 import { Buffer } from 'buffer';
@@ -21,6 +22,7 @@ createApp(App)
           }
       }
   })
+  .component('Image', Image)
   .use(store)
   .use(router)
   .use(i18n)
