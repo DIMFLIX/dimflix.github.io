@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dimflix.github.io/sitemap.xml
+
