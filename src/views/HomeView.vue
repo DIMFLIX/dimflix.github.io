@@ -26,8 +26,9 @@ const getLang = () => (route.params.lang as string) || (locale as any)?.value ||
 
 const photos = [
   require('@/assets/my-photo.png'),
-  require('@/assets/my-photo1.jpg'),
   require('@/assets/my-photo2.jpg'),
+  require('@/assets/my-photo1.jpg'),
+  require('@/assets/my-photo6.png'),
   require('@/assets/my-photo3.jpg'),
   require('@/assets/my-photo4.jpg'),
   require('@/assets/my-photo5.jpg')
