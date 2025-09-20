@@ -1,0 +1,47 @@
+diff --git a/node_modules/prerender-spa-plugin/es6/index.js b/node_modules/prerender-spa-plugin/es6/index.js
+index 1a7c3ed..fd98c16 100644
+--- a/node_modules/prerender-spa-plugin/es6/index.js
++++ b/node_modules/prerender-spa-plugin/es6/index.js
+@@ -1,4 +1,5 @@
+ const path = require('path')
++const fs = require('fs')
+ const Prerenderer = require('@prerenderer/prerenderer')
+ const PuppeteerRenderer = require('@prerenderer/renderer-puppeteer')
+ const { minify } = require('html-minifier')
+@@ -57,7 +58,24 @@ PrerenderSPAPlugin.prototype.apply = function (compiler) {
+   // From https://github.com/ahmadnassri/mkdirp-promise/blob/master/lib/index.js
+   const mkdirp = function (dir, opts) {
+     return new Promise((resolve, reject) => {
+-      compilerFS.mkdirp(dir, opts, (err, made) => err === null ? resolve(made) : reject(err))
++      if (typeof compilerFS.mkdirp === 'function') {
++        // Webpack 4 and some FS implementations
++        compilerFS.mkdirp(dir, opts, (err, made) => err === null ? resolve(made) : reject(err))
++        return
++      }
++      // Webpack 5 fallback: use Node fs with recursive mkdir
++      try {
++        if (typeof fs.mkdir === 'function') {
++          fs.mkdir(dir, { recursive: true }, (err) => err == null ? resolve() : reject(err))
++        } else if (typeof compilerFS.mkdir === 'function') {
++          // Minimal fallback without recursion support
++          compilerFS.mkdir(dir, (err) => (err == null || (err && err.code === 'EEXIST')) ? resolve() : reject(err))
++        } else {
++          reject(new Error('No mkdir method available on outputFileSystem'))
++        }
++      } catch (e) {
++        reject(e)
++      }
+     })
+   }
+ 
+@@ -142,6 +160,10 @@ PrerenderSPAPlugin.prototype.apply = function (compiler) {
+       })
+       .catch(err => {
+         PrerendererInstance.destroy()
++        // Log the underlying error for debugging
++        try {
++          console.error('[prerender-spa-plugin] Underlying error:', err && err.stack ? err.stack : err)
++        } catch (_) {}
+         const msg = '[prerender-spa-plugin] Unable to prerender all routes!'
+         console.error(msg)
+         compilation.errors.push(new Error(msg))

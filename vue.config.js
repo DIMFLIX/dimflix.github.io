@@ -24,8 +24,11 @@ module.exports = defineConfig({
         new PrerenderSPAPlugin({
           staticDir: path.join(__dirname, 'dist'),
           routes: ['/', '/en', '/ru', '/en/about', '/ru/about', '/en/portfolio', '/ru/portfolio', '/en/articles', '/ru/articles'],
+          maxConcurrentRoutes: 4,
           renderer: new PrerenderSPAPlugin.PuppeteerRenderer({
-            renderAfterDocumentEvent: 'render-event'
+            renderAfterDocumentEvent: 'render-event',
+            // Флаги для стабильного запуска Chromium в CI/контейнерах
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
           })
         })
       ] : [])
