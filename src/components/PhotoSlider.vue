@@ -6,12 +6,14 @@ interface Props {
   interval?: number;
   showFrame?: boolean;
   showIndicators?: boolean;
+  altTexts?: string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   interval: 3000,
   showFrame: true,
-  showIndicators: true
+  showIndicators: true,
+  altTexts: () => []
 });
 
 const currentPhotoIndex = ref(0);
@@ -54,7 +56,7 @@ onUnmounted(() => {
   <div class="photo-slider" :style="{'--slider-aspect-ratio': showFrame ? '468/604' : '3/4'}">
     <div class="slider-container" :class="{ 'with-frame': showFrame }">
       <!-- SVG frame version -->
-      <svg v-if="showFrame" viewBox="0 0 468 604" preserveAspectRatio="xMidYMid meet">
+      <svg v-if="showFrame" viewBox="0 0 468 604" preserveAspectRatio="xMidYMid meet" role="img" :aria-label="altTexts && altTexts.length ? altTexts[currentPhotoIndex] : undefined">
         <defs>
           <clipPath id="photo-frame-clip">
             <path d="M48.1616 34.1354C50.2902 30.2234 53.953 27.3756 58.2689 26.277L159.558 0.494444C160.847 0.166097 162.173 0 163.504 0H451.193C460.03 0 467.193 7.16344 467.193 16V480.5V587.293C467.193 596.129 460.03 603.293 451.193 603.293H331H16.0804C7.24388 603.293 0.0804443 596.129 0.0804443 587.293V126.571C0.0804443 123.9 0.74939 121.271 2.02625 118.924L48.1616 34.1354Z"/>
@@ -79,6 +81,7 @@ onUnmounted(() => {
           v-for="(photo, index) in photos" 
           :key="index"
           :src="photo" 
+          :alt="altTexts && altTexts[index] ? altTexts[index] : `Photo ${index+1}`"
           :class="{ active: currentPhotoIndex === index }"
         />
       </div>

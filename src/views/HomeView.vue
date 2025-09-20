@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 import RocketIcon from "@/components/icons/RocketIcon.vue";
 import StarsIcon from "@/components/icons/StarsIcon.vue";
@@ -18,6 +20,9 @@ import SocialMediaBtn from "@/components/SocialMediaBtn.vue";
 import PhotoSlider from '@/components/PhotoSlider.vue';
 
 const { t, locale } = useI18n();
+const route = useRoute();
+const currentLang = computed(() => (route.params.lang as string) || (locale as any)?.value || 'en')
+const getLang = () => (route.params.lang as string) || (locale as any)?.value || 'en'
 
 const photos = [
   require('@/assets/my-photo.png'),
@@ -27,6 +32,27 @@ const photos = [
   require('@/assets/my-photo4.jpg'),
   require('@/assets/my-photo5.jpg')
 ];
+
+const altTexts = computed(() => {
+  if (locale.value === 'ru') {
+    return [
+      'Фото Дмитрия (DIMFLIX) — портрет',
+      'Фото Дмитрия (DIMFLIX) — Full‑Stack & AI/ML разработчик',
+      'Фото Дмитрия (DIMFLIX) — за работой',
+      'Фото Дмитрия (DIMFLIX) — профильный снимок',
+      'Фото Дмитрия (DIMFLIX) — рабочий момент',
+      'Фото Дмитрия (DIMFLIX) — неформальный портрет'
+    ]
+  }
+  return [
+    'Photo of Dmitry (DIMFLIX) — portrait',
+    'Photo of Dmitry (DIMFLIX) — Full‑Stack & AI/ML developer',
+    'Photo of Dmitry (DIMFLIX) — at work',
+    'Photo of Dmitry (DIMFLIX) — profile shot',
+    'Photo of Dmitry (DIMFLIX) — work moment',
+    'Photo of Dmitry (DIMFLIX) — candid portrait'
+  ]
+});
 </script>
 
 <template>
@@ -43,11 +69,11 @@ const photos = [
       </div>
       <DiamondLine class="bm30" />
       <NavBtn :title="t('home.nav.about_me.title')" :IconComponent="AboutMeIcon"
-        :description="t('home.nav.about_me.description')" url="/about" class="bm20" />
+        :description="t('home.nav.about_me.description')" :url="{ name: 'about', params: { lang: getLang() } }" class="bm20" />
       <NavBtn :title="t('home.nav.portfolio.title')" :IconComponent="PortfolioIcon"
-        :description="t('home.nav.portfolio.description')" url="/portfolio" class="bm20" />
+        :description="t('home.nav.portfolio.description')" :url="{ name: 'portfolio', params: { lang: getLang() } }" class="bm20" />
       <NavBtn :title="t('home.nav.articles.title')" :IconComponent="ArticlesIcon"
-        :description="t('home.nav.articles.description')" url="/articles" class="bm30" />
+        :description="t('home.nav.articles.description')" :url="{ name: 'Articles', params: { lang: getLang() } }" class="bm30" />
       <DiamondLine class="bm30" />
       <div class="social-media">
         <SocialMediaBtn :IconComponent="YoutubeIcon" url="https://www.youtube.com/dimflix"
@@ -67,6 +93,7 @@ const photos = [
         :interval="3000" 
         :show-frame="true"
         :show-indicators="true"
+        :alt-texts="altTexts"
       />
 
       <a href="https://nn.hh.ru/resume/08915fc3ff0cef7b610039ed1f6c6a514a6956" target="_blank" class="resume-btn">

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router'
+import { onMounted, onBeforeUnmount } from 'vue'
 import MarkdownArticle from '@/components/MarkdownArticle.vue'
 
 const route = useRoute()
@@ -9,6 +10,36 @@ const router = useRouter()
 const { t } = useI18n();
 
 const articleId = route.params.id as string
+
+// Inject BlogPosting JSON-LD for SEO with dates/keywords
+import { getArticleMeta } from '@/utils/articles'
+let ldEl: HTMLScriptElement | null = null
+onMounted(async () => {
+  try {
+    const url = typeof window !== 'undefined' ? window.location.href : `https://dimflix.github.io/articles/${articleId}`
+    const lang = (route.params.lang as string) || 'en'
+    const meta = await getArticleMeta(lang, articleId)
+    const data: any = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: (meta?.title || document.title || `Article ${articleId}`),
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+      author: { '@type': 'Person', name: 'DIMFLIX', url: 'https://x.com/dimflix' }
+    }
+    if (meta?.date) data.datePublished = meta.date
+    if (meta?.updatedAt) data.dateModified = meta.updatedAt
+    if (meta?.keywords?.length) data.keywords = meta.keywords
+
+    ldEl = document.createElement('script')
+    ldEl.type = 'application/ld+json'
+    ldEl.text = JSON.stringify(data)
+    document.head.appendChild(ldEl)
+  } catch {}
+})
+
+onBeforeUnmount(() => {
+  if (ldEl && ldEl.parentNode) ldEl.parentNode.removeChild(ldEl)
+})
 </script>
 
 <template>

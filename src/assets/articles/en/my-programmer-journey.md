@@ -1,8 +1,22 @@
 ---
-date: 2025-08-31 23:15
-updatedAt: 2025-08-31 23:15
+date: 2025-08-31T23:15:00Z
+updatedAt: 2025-09-25T15:46:00Z
 title: "A Programmer's Journey: How a Hobby Became a Profession"
-excerpt: "A personal story of professional growth: from the first experiments with code to a confident career as a programmer."
+excerpt: "A personal story of growth: from first code experiments to a confident full‑stack & AI/ML career."
+keywords:
+  - programming journey
+  - career
+  - full-stack
+  - AI/ML
+  - Python
+  - Qt
+  - Telegram bots
+  - hackathons
+  - Arch Linux
+  - meowrch
+  - Spectrum Security
+  - open source
+  - dimflix
 ---
 
 # The Beginning: School Years

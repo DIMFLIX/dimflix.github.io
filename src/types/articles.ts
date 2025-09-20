@@ -5,4 +5,5 @@ export interface ArticleMeta {
   date: string
   updatedAt?: string
   lang: string
+  keywords?: string[]
 }

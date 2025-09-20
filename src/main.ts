@@ -5,17 +5,10 @@ import router from "./router";
 import store from "./store";
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
-import { messages } from './localization'
-
-import { createI18n } from 'vue-i18n'
+import i18n from './i18n'
 
 import { Buffer } from 'buffer';
 (window as any).Buffer = Buffer; // Для браузеров, где Buffer не определён:cite[3]
-
-const i18n = createI18n({
-  locale: 'en',
-  messages: messages
-})
 
 createApp(App)
   .use(PrimeVue, {
@@ -32,3 +25,8 @@ createApp(App)
   .use(router)
   .use(i18n)
   .mount("#app");
+
+// Signal for prerender-spa-plugin to finish rendering
+if (typeof document !== 'undefined') {
+  document.dispatchEvent(new Event('render-event'))
+}

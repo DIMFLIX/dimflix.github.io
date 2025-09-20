@@ -12,6 +12,12 @@ const parseMarkdownContent = (content: string) => {
   const excerpt = data.excerpt || "";
   const parsedDate = new Date(data.date || new Date())
   const updatedAt = data.updatedAt ? new Date(data.updatedAt) : null
+  const keywords: string[] | undefined = Array.isArray(data.tags)
+    ? data.tags
+    : Array.isArray(data.keywords)
+      ? data.keywords
+      : (typeof data.tags === 'string' ? data.tags.split(',').map((s: string) => s.trim()).filter(Boolean)
+        : (typeof data.keywords === 'string' ? data.keywords.split(',').map((s: string) => s.trim()).filter(Boolean) : undefined))
 
   // Автоматическое извлечение заголовка из первого h1
   if (!title) {
@@ -31,6 +37,7 @@ const parseMarkdownContent = (content: string) => {
     excerpt: excerpt || "",
     date: parsedDate.toISOString(),
     updatedAt: updatedAt?.toISOString() || null,
+    keywords,
   };
 };
 
@@ -45,7 +52,7 @@ export const getArticlesMeta = async (lang: string): Promise<ArticleMeta[]> => {
       const slug = match[2];
       try {
         const content = await context(path);
-        const { title, excerpt, date, updatedAt } = parseMarkdownContent(content.default);
+        const { title, excerpt, date, updatedAt, keywords } = parseMarkdownContent(content.default);
 
         articles.push({
           slug,
@@ -53,6 +60,7 @@ export const getArticlesMeta = async (lang: string): Promise<ArticleMeta[]> => {
           excerpt,
           date: new Date(date).toISOString(),
           updatedAt: updatedAt || undefined,
+          keywords,
           lang,
         });
       } catch (error) {
@@ -66,3 +74,24 @@ export const getArticlesMeta = async (lang: string): Promise<ArticleMeta[]> => {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 };
+
+export const getArticleMeta = async (lang: string, slug: string): Promise<ArticleMeta | null> => {
+  try {
+    const key = `./${lang}/${slug}.md`
+    const context = require.context("@/assets/articles", true, /\.md$/, "lazy");
+    const content = await context(key)
+    const { title, excerpt, date, updatedAt, keywords } = parseMarkdownContent(content.default)
+    return {
+      slug,
+      title,
+      excerpt,
+      date: new Date(date).toISOString(),
+      updatedAt: updatedAt || undefined,
+      keywords,
+      lang
+    }
+  } catch (e) {
+    console.error('getArticleMeta failed', lang, slug, e)
+    return null
+  }
+}

@@ -35,6 +35,15 @@ const changeLanguage = () => {
 
 	locale.value = new_lang;
 	localStorage.setItem('lang', new_lang);
+  try { document.documentElement.setAttribute('lang', new_lang) } catch {}
+  const current = router.currentRoute.value
+  const name = current.name
+  const params = { ...current.params, lang: new_lang }
+  if (name) {
+    router.replace({ name, params, query: current.query, hash: current.hash })
+  } else {
+    router.replace({ path: `/${new_lang}` })
+  }
 };
 
 const toggleTheme = () => {
@@ -59,7 +68,7 @@ onMounted(() => {
 	<div :class="{ 'dark-theme': isDarkTheme }">
 		<!-- Капсула для десктопа -->
 		<div class="floating-pill desktop-only">
-			<button class="pill-btn" @click="router.push('/')" title="Home">
+			<button class="pill-btn" @click="router.push({ name: 'home', params: { lang: locale.value } })" title="Home">
 				<HomeIcon class="icon"/>
 			</button>
 			<button class="pill-btn" @click="openSponsor" :title="t('sponsor.title')">
@@ -94,7 +103,7 @@ onMounted(() => {
 				<button class="menu-btn" @click="openSponsor" :title="t('sponsor.title')">
 					<HeartIcon class="icon"/>
 				</button>
-				<button class="menu-btn" @click="router.push('/')" title="Home">
+				<button class="menu-btn" @click="router.push({ name: 'home', params: { lang: locale.value } })" title="Home">
 					<HomeIcon class="icon"/>
 				</button>
 				<button class="menu-btn" @click="changeLanguage" title="Language">
