@@ -403,16 +403,30 @@ export default defineComponent({
     };
 
     const downloadPDF = async () => {
-      // Всегда скачиваем предсобранный статический PDF с текущего домена и BASE_URL
-      const baseFromTag = (document.querySelector('base[href]') as HTMLBaseElement | null)?.getAttribute('href') || '';
-      let base = baseFromTag || (process.env.BASE_URL as string) || '/';
-      if (!base.endsWith('/')) base += '/';
+      // Всегда скачиваем предсобранный статический PDF с корректной BASE_URL даже для GitHub Pages project pages
+      const computeBase = (): string => {
+        const tag = (document.querySelector('base[href]') as HTMLBaseElement | null)?.getAttribute('href') || '';
+        let base = tag || (process.env.BASE_URL as string) || '/';
+        if (!base || base === '/') {
+          // Попытка определить префикс проекта из URL: /<repo>/(en|ru)/...
+          const seg = window.location.pathname.split('/').filter(Boolean);
+          const first = seg[0];
+          if (first && first !== 'en' && first !== 'ru') {
+            base = '/' + first + '/';
+          } else {
+            base = '/';
+          }
+        }
+        if (!base.endsWith('/')) base += '/';
+        return base;
+      };
+      const base = computeBase();
       const url = new URL(base + 'DIMFLIX-Resume.pdf', window.location.origin).toString();
       try {
         const res = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
         if (!res.ok) throw new Error('PDF not found');
         const ct = res.headers.get('content-type') || '';
-        if (!/application\/pdf|application\/octet-stream/i.test(ct)) throw new Error('Unexpected content-type: ' + ct);
+        if (ct && !/application\/pdf|application\/octet-stream/i.test(ct)) throw new Error('Unexpected content-type: ' + ct);
         const blob = await res.blob();
         const dl = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -423,8 +437,7 @@ export default defineComponent({
         a.remove();
         setTimeout(() => URL.revokeObjectURL(dl), 5000);
       } catch (e) {
-        // Никаких колонтитулов: не уходим в print(); сообщаем, что нужен build:pdf
-        alert('PDF не найден по адресу ' + url + '\nСоберите проект: npm run build:pdf, затем перезапустите dev-сервер (npm run serve) и обновите страницу.');
+        alert('PDF не найден по адресу ' + url + '\nЕсли это прод, убедитесь что он задеплоен на путь проекта.\nЛокально — выполните npm run build:pdf.');
       }
     };
 
@@ -492,6 +505,25 @@ export default defineComponent({
   color: var(--text-color);
   line-height: 1.6;
 }
+/* Предотвращаем выход длинных слов/URL за границы контейнера на экране */
+.markdown-body :deep(p),
+.markdown-body :deep(li),
+.markdown-body :deep(a),
+.caption {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
+}
+/* Инлайновый код допускаем переносы, но блоки кода — скроллим */
+.markdown-body :deep(code) { white-space: break-spaces; word-break: break-word; }
+.markdown-body :deep(pre) { overflow-x: auto; white-space: pre; -webkit-overflow-scrolling: touch; }
+.markdown-body :deep(pre) :deep(code) { white-space: pre; }
+
+/* Таблицы на экране с видимыми границами */
+.markdown-body :deep(table) { border-collapse: collapse; width: 100%; }
+.markdown-body :deep(th),
+.markdown-body :deep(td) { border: 1px solid rgba(127,127,127,0.3); padding: 6px 8px; }
+.markdown-body :deep(thead) :deep(th) { background: rgba(127,127,127,0.08); }
 
 /* Стили для контента, отрисованного через v-html */
 .markdown-body :deep(a) {
@@ -676,6 +708,21 @@ export default defineComponent({
 
 /* На экране визуально показываем место разрыва (тонкая линия) */
 .page-break { border-top: 1px dashed rgba(127,127,127,0.3); margin: 24px 0; }
+
+/* Мобильная адаптация */
+@media (max-width: 600px) {
+  .resume-page { padding: 1rem; }
+  .resume-container { padding: 1rem; border-radius: 6px; }
+  .actions { position: sticky; top: 0; background: var(--sbg1-color); padding: 0.5rem 0; z-index: 5; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .download-btn { width: 100%; }
+  .grid { grid-template-columns: 1fr; gap: 8px; }
+  .fit-screen, .fit-screen :deep(img) { max-height: 50vh !important; }
+  .page-item { margin-bottom: 12px; }
+  .markdown-body { font-size: 1rem; line-height: 1.65; }
+  /* Таблицы в v-html горизонтально прокручиваемы при узком экране */
+  .markdown-body :deep(table) { display: block; overflow-x: auto; width: 100%; }
+}
+
 /* Режим экспорта в PDF через html2pdf: чёрный текст, белый фон, по одной картинке на страницу */
 .pdf-sandbox { position: fixed; left: -99999px; top: -99999px; z-index: -1; width: 720px; opacity: 0; pointer-events: none; }
 .pdf-sandbox #resume-content { background: #fff !important; color: #000 !important; }
