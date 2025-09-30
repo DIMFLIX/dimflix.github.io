@@ -97,10 +97,10 @@ const altTexts = computed(() => {
         :alt-texts="altTexts"
       />
 
-      <a href="https://nn.hh.ru/resume/08915fc3ff0cef7b610039ed1f6c6a514a6956" target="_blank" class="resume-btn">
+      <router-link :to="{ name: 'resume', params: { lang: getLang() } }" class="resume-btn">
         <ResumeIcon />
         <p class="text">{{ t('home.resume_btn') }}</p>
-      </a>
+      </router-link>
     </div>
   </div>
 </template>

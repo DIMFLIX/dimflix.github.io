@@ -60,6 +60,16 @@ const localizedChildren: Array<RouteRecordRaw> = [
       description: 'Статья от DIMFLIX по теме разработки/AI/ML.',
       canonicalSegment: (route: any) => `/articles/${route.params.id}`
     }
+  },
+  {
+    path: 'resume',
+    name: 'resume',
+    component: () => import('@/views/Resume.vue'),
+    meta: {
+      title: 'DIMFLIX | Resume',
+      description: 'Резюме Full-Stack & AI/ML разработчика.',
+      canonicalSegment: '/resume'
+    }
   }
 ]
 
