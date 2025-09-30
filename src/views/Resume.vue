@@ -2,7 +2,10 @@
   <div class="resume-page">
     <div class="resume-container">
       <div class="actions">
-        <button @click="downloadPDF" class="download-btn">Скачать PDF</button>
+        <button @click="downloadPDF" class="download-btn" :disabled="isDownloading" :aria-busy="isDownloading ? 'true' : 'false'" :aria-disabled="isDownloading ? 'true' : 'false'">
+          <span v-if="isDownloading" class="spinner" aria-hidden="true"></span>
+          <span>{{ isDownloading ? 'Готовим PDF…' : 'Скачать PDF' }}</span>
+        </button>
       </div>
       <div id="resume-content">
         <div class="markdown-body" v-html="resumeHtml"></div>
@@ -117,6 +120,8 @@ export default defineComponent({
     const awards = ref(awardsList as any[]);
     const certificates = ref(certificatesList as any[]);
     const patents = ref(patentsList as any[]);
+
+    const isDownloading = ref(false);
 
     const isPdf = ref(false);
     onMounted(() => {
@@ -403,6 +408,7 @@ export default defineComponent({
     };
 
     const downloadPDF = async () => {
+      isDownloading.value = true;
       // Всегда скачиваем предсобранный статический PDF с корректной BASE_URL даже для GitHub Pages project pages
       const computeBase = (): string => {
         const tag = (document.querySelector('base[href]') as HTMLBaseElement | null)?.getAttribute('href') || '';
@@ -438,6 +444,8 @@ export default defineComponent({
         setTimeout(() => URL.revokeObjectURL(dl), 5000);
       } catch (e) {
         alert('PDF не найден по адресу ' + url + '\nЕсли это прод, убедитесь что он задеплоен на путь проекта.\nЛокально — выполните npm run build:pdf.');
+      } finally {
+        isDownloading.value = false;
       }
     };
 
@@ -447,6 +455,7 @@ export default defineComponent({
       certificates,
       patents,
       isPdf,
+      isDownloading,
       patentFirst,
       patentRest,
       awardsFirst,
@@ -495,10 +504,32 @@ export default defineComponent({
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.download-btn:hover {
+.download-btn[disabled] {
+  opacity: 0.85;
+  cursor: not-allowed;
+}
+
+.download-btn:hover:not([disabled]) {
   filter: brightness(1.1);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-top-color: rgba(255,255,255,1);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .markdown-body {
