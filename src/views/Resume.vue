@@ -174,8 +174,8 @@ export default defineComponent({
       try {
         // Пытаемся загрузить через Image() и перекодировать в JPEG для снижения веса
         const img = new window.Image() as HTMLImageElement;
-        // Для безопасности на случай CDN — но для того же домена обычно не требуется
-        img.crossOrigin = 'anonymous';
+        // Устанавливаем crossOrigin только если источник отличается, чтобы избежать tainted-canvas
+        if (!isSameOrigin(src)) img.crossOrigin = 'anonymous';
         img.decoding = 'async';
         const loaded: Promise<void> = new Promise((resolve, reject) => {
           img.addEventListener('load', () => resolve(), { once: true });
@@ -224,17 +224,15 @@ export default defineComponent({
 
     // Предварительно прогреваем кэш изображений в фоне (не блокирует UI)
     // Делает клик «Скачать PDF» почти мгновенным, т.к. данные уже готовы
-    const prewarmImages = () => {
-      // Берём URL-ы из данных (патенты/награды/сертификаты)
-      const urls: string[] = [];
+    // Предзагрузка изображений больше не запускается на mount, чтобы не замедлять страницу.
+    const prewarmImages = () => {}; // no-op; оставляем функцию для возможного ручного вызова в будущем
+
+    // Хелпер для определения, является ли URL того же источника
+    const isSameOrigin = (src: string) => {
       try {
-        for (const p of patents.value || []) { for (const u of (p.pages || [])) urls.push(u); }
-        for (const a of awards.value || []) urls.push(a.src);
-        for (const c of certificates.value || []) urls.push(c.src);
-      } catch {}
-      const unique = Array.from(new Set(urls.filter(Boolean)));
-      // Стартуем без await, в фоне
-      unique.forEach((u) => { ensureImageCached(u); });
+        const u = new URL(src, window.location.origin);
+        return u.origin === window.location.origin;
+      } catch { return true; }
     };
 
     // Создаём песочницу (offscreen) с клоном контента, чтобы не ломать текущую страницу
@@ -249,8 +247,6 @@ export default defineComponent({
       return { sandbox, sandboxContent: clone };
     };
 
-    // Стартуем прогрев изображений после первичной отрисовки
-    setTimeout(() => { try { prewarmImages(); } catch {} }, 0);
 
     const destroySandbox = (sandbox: HTMLElement | null) => {
       if (sandbox && sandbox.parentNode) sandbox.parentNode.removeChild(sandbox);
