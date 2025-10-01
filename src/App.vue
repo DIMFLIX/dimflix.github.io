@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import SunIcon from '@/components/icons/SunIcon.vue';
 import MoonIcon from '@/components/icons/MoonIcon.vue';
@@ -15,6 +15,21 @@ const isDarkTheme = ref(false);
 const isMenuOpen = ref(false);
 const isSponsorOpen = ref(false);
 const { t, locale } = useI18n();
+
+// Desktop floating pill activation state
+const isPillActive = ref(false);
+let pillHideTimer = null;
+const activatePill = () => {
+  if (pillHideTimer) { clearTimeout(pillHideTimer); pillHideTimer = null; }
+  isPillActive.value = true;
+};
+const schedulePillHide = () => {
+  if (pillHideTimer) { clearTimeout(pillHideTimer); }
+  pillHideTimer = setTimeout(() => {
+    isPillActive.value = false;
+    pillHideTimer = null;
+  }, 2000);
+};
 
 const toggleMenu = () => {
 	isMenuOpen.value = !isMenuOpen.value;
@@ -62,12 +77,17 @@ onMounted(() => {
     locale.value = savedLang;
   }
 });
+
+onBeforeUnmount(() => {
+  if (pillHideTimer) { clearTimeout(pillHideTimer); pillHideTimer = null; }
+});
 </script>
 
 <template>
 	<div :class="{ 'dark-theme': isDarkTheme }">
 		<!-- Капсула для десктопа -->
-		<div class="floating-pill desktop-only">
+		<div class="pill-activation-zone desktop-only" @mouseenter="activatePill" @mouseleave="schedulePillHide"></div>
+		<div class="floating-pill desktop-only" :class="{ 'is-raised': isPillActive }" @mouseenter="activatePill" @mouseleave="schedulePillHide">
 			<button class="pill-btn" @click="router.push({ name: 'home', params: { lang: locale.value } })" title="Home">
 				<HomeIcon class="icon"/>
 			</button>
@@ -204,6 +224,17 @@ body {
 		}
 	}
 
+	&.is-raised {
+		bottom: 20px;
+		box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15);
+		background: rgba(255, 255, 255, 0.85);
+
+		.dark-theme & {
+			background: rgba(40, 40, 40, 0.7);
+			box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+		}
+	}
+
 	.pill-btn {
 		position: relative;
 		width: 44px;
@@ -262,6 +293,19 @@ body {
 			}
 		}
 	}
+}
+
+// Зона активации капсулы (десктоп)
+.pill-activation-zone {
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 0;
+	width: 360px;
+	height: 80px;
+	pointer-events: auto;
+	background: transparent;
+	z-index: 998;
 }
 
 // Стили для модального окна спонсорства
