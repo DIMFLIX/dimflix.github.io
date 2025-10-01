@@ -115,17 +115,7 @@ function createStaticServer(rootDir) {
         preferCSSPageSize: true,
       });
 
-      // Также кладём копию в public/ для dev-сервера
-      try {
-        const PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
-        if (fs.existsSync(PUBLIC_DIR)) {
-          const PUB_OUT = path.resolve(PUBLIC_DIR, `DIMFLIX-Resume.${loc}.pdf`);
-          fs.copyFileSync(OUT_PDF_LOC, PUB_OUT);
-          console.log(`[pdf] Copied to ${PUB_OUT} for dev server (public/)`);
-        }
-      } catch (e) {
-        console.warn('[pdf] Copy to public/ failed:', e && e.message ? e.message : e);
-      }
+      // No copy to public/: avoid modifying repo files during deploy
     }
 
     await exportLocale('en');

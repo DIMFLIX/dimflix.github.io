@@ -467,8 +467,13 @@ export default defineComponent({
         a.remove();
         setTimeout(() => URL.revokeObjectURL(dl), 5000);
       } catch (e) {
-        const url = base + primaryName;
-        alert(t('resume.pdfNotFound', { url }));
+        if (process.env.NODE_ENV !== 'production') {
+          // In dev, fall back to on-the-fly PDF generation
+          try { await generatePdf(primaryName); } catch {}
+        } else {
+          const url = base + primaryName;
+          alert(t('resume.pdfNotFound', { url }));
+        }
       } finally {
         isDownloading.value = false;
       }
