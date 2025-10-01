@@ -92,6 +92,15 @@ export const messages = {
         published: "Published",
         updated: "Updated"
       },
+      resume: {
+        preparingPdf: "Preparing PDF…",
+        downloadPdf: "Download PDF",
+        patents: "Patents",
+        awards: "Awards",
+        certificates: "Certificates",
+        page: "page",
+        pdfNotFound: "PDF not found at {url}\nIf this is production, ensure it's deployed at the project path.\nLocally — run npm run build:pdf."
+      },
       reviews: {
         title: "Reviews",
         leave: "Leave a review",
@@ -207,6 +216,15 @@ export const messages = {
         readMore: "Подробнее",
         published: "Опубликовано",
         updated: "Обновлено"
+      },
+      resume: {
+        preparingPdf: "Готовим PDF…",
+        downloadPdf: "Скачать PDF",
+        patents: "Патенты",
+        awards: "Награды",
+        certificates: "Сертификаты",
+        page: "стр.",
+        pdfNotFound: "PDF не найден по адресу {url}\nЕсли это прод, убедитесь что он задеплоен на путь проекта.\nЛокально — выполните npm run build:pdf."
       },
       reviews: {
         title: "Отзывы",

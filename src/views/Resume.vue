@@ -4,7 +4,7 @@
       <div class="actions">
         <button @click="downloadPDF" class="download-btn" :disabled="isDownloading" :aria-busy="isDownloading ? 'true' : 'false'" :aria-disabled="isDownloading ? 'true' : 'false'">
           <span v-if="isDownloading" class="spinner" aria-hidden="true"></span>
-          <span>{{ isDownloading ? 'Готовим PDF…' : 'Скачать PDF' }}</span>
+          <span>{{ isDownloading ? t('resume.preparingPdf') : t('resume.downloadPdf') }}</span>
         </button>
       </div>
       <div id="resume-content">
@@ -16,12 +16,12 @@
         <section class="attachments">
           <!-- Patents: normal on screen -->
           <template v-if="!isPdf">
-            <h2>Патенты</h2>
+            <h2>{{ t('resume.patents') }}</h2>
             <div class="patents">
               <template v-for="(patent, idx) in patents" :key="'p-'+idx">
                 <div v-for="(pageSrc, pi) in patent.pages" :key="'p-'+idx + '-' + pi" class="page-item">
-                  <Image :src="pageSrc" :alt="tpatent(patent) + ' — стр. ' + (pi+1)" class="grid-img fit-screen fit-print" />
-                  <div class="caption">{{ tpatent(patent) }} — стр. {{ pi+1 }}</div>
+                  <Image :src="pageSrc" :alt="tpatent(patent) + ' — ' + t('resume.page') + ' ' + (pi+1)" class="grid-img fit-screen fit-print" />
+                  <div class="caption">{{ tpatent(patent) }} — {{ t('resume.page') }} {{ pi+1 }}</div>
                 </div>
               </template>
             </div>
@@ -30,13 +30,13 @@
           <template v-else>
             <div class="patents">
               <div v-if="patentFirst" class="page-item section-start">
-                <h2>Патенты</h2>
-                <Image :src="patentFirst.src" :alt="tpatent(patentFirst.patent) + ' — стр. ' + (patentFirst.pageIndex+1)" class="grid-img fit-screen fit-print" />
-                <div class="caption">{{ tpatent(patentFirst.patent) }} — стр. {{ patentFirst.pageIndex + 1 }}</div>
+                <h2>{{ t('resume.patents') }}</h2>
+                <img :src="patentFirst.src" :alt="tpatent(patentFirst.patent) + ' — ' + t('resume.page') + ' ' + (patentFirst.pageIndex+1)" class="pdf-img" />
+                <div class="caption">{{ tpatent(patentFirst.patent) }} — {{ t('resume.page') }} {{ patentFirst.pageIndex + 1 }}</div>
               </div>
               <div v-for="(pp, ri) in patentRest" :key="'pr-'+ri" class="page-item">
-                <Image :src="pp.src" :alt="tpatent(pp.patent) + ' — стр. ' + (pp.pageIndex+1)" class="grid-img fit-screen fit-print" />
-                <div class="caption">{{ tpatent(pp.patent) }} — стр. {{ pp.pageIndex + 1 }}</div>
+                <img :src="pp.src" :alt="tpatent(pp.patent) + ' — ' + t('resume.page') + ' ' + (pp.pageIndex+1)" class="pdf-img" />
+                <div class="caption">{{ tpatent(pp.patent) }} — {{ t('resume.page') }} {{ pp.pageIndex + 1 }}</div>
               </div>
             </div>
           </template>
@@ -45,7 +45,7 @@
 
           <!-- Awards: normal on screen -->
           <template v-if="!isPdf">
-            <h2>Награды</h2>
+            <h2>{{ t('resume.awards') }}</h2>
             <div class="grid">
               <div v-for="(award, i) in awards" :key="'a-'+i" class="page-item">
                 <Image :src="award.src" :alt="talt(award)" class="grid-img fit-screen fit-print" />
@@ -56,11 +56,11 @@
           <template v-else>
             <div class="grid">
               <div v-if="awardsFirst" class="page-item section-start">
-                <h2>Награды</h2>
-                <Image :src="awardsFirst.src" :alt="talt(awardsFirst)" class="grid-img fit-screen fit-print" />
+                <h2>{{ t('resume.awards') }}</h2>
+                <img :src="awardsFirst.src" :alt="talt(awardsFirst)" class="pdf-img" />
               </div>
               <div v-for="(award, i) in awardsRest" :key="'ar-'+i" class="page-item">
-                <Image :src="award.src" :alt="talt(award)" class="grid-img fit-screen fit-print" />
+                <img :src="award.src" :alt="talt(award)" class="pdf-img" />
               </div>
             </div>
           </template>
@@ -69,7 +69,7 @@
 
           <!-- Certificates: normal on screen -->
           <template v-if="!isPdf">
-            <h2>Сертификаты</h2>
+            <h2>{{ t('resume.certificates') }}</h2>
             <div class="grid">
               <div v-for="(cert, j) in certificates" :key="'c-'+j" class="page-item">
                 <Image :src="cert.src" :alt="talt(cert)" class="grid-img fit-screen fit-print" />
@@ -80,11 +80,11 @@
           <template v-else>
             <div class="grid">
               <div v-if="certificatesFirst" class="page-item section-start">
-                <h2>Сертификаты</h2>
-                <Image :src="certificatesFirst.src" :alt="talt(certificatesFirst)" class="grid-img fit-screen fit-print" />
+                <h2>{{ t('resume.certificates') }}</h2>
+                <img :src="certificatesFirst.src" :alt="talt(certificatesFirst)" class="pdf-img" />
               </div>
               <div v-for="(cert, j) in certificatesRest" :key="'cr-'+j" class="page-item">
-                <Image :src="cert.src" :alt="talt(cert)" class="grid-img fit-screen fit-print" />
+                <img :src="cert.src" :alt="talt(cert)" class="pdf-img" />
               </div>
             </div>
           </template>
@@ -95,13 +95,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue';
+import { defineComponent, onMounted, ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import MarkdownIt from 'markdown-it';
-// Загружаем markdown как сырой текст из корня проекта (без дублирования файла)
+// Загружаем markdown в зависимости от языка
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import resumeMarkdown from '!!raw-loader!@/content/RESUME.md';
+import resumeMarkdownRu from '!!raw-loader!@/content/RESUME.md';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import resumeMarkdownEn from '!!raw-loader!@/content/RESUME.en.md';
 import { awardsList, certificatesList, patentsList } from '@/data/achievements';
 import Image from 'primevue/image';
 import MultiPageImage from '@/components/primevue/MultiPageImage.vue';
@@ -113,7 +116,7 @@ export default defineComponent({
   name: 'ResumePage',
   components: { Image, MultiPageImage },
   setup() {
-    const { locale } = useI18n();
+    const { t, locale } = useI18n();
     const resumeHtml = ref('');
     const md = new MarkdownIt();
 
@@ -142,11 +145,18 @@ export default defineComponent({
     const certificatesFirst = computed(() => (certificates.value && certificates.value.length ? certificates.value[0] : null));
     const certificatesRest = computed(() => (certificates.value || []).slice(1));
 
-    onMounted(() => {
-      // Поддержка маркера разрыва страниц в markdown: <!-- pagebreak -->
-      const withBreaks = (resumeMarkdown as string).replace(/<!--\s*pagebreak\s*-->/gi, '<div class="page-break"></div>');
-      resumeHtml.value = md.render(withBreaks);
-    });
+    const pickResumeMarkdown = () => (locale.value === 'ru' ? (resumeMarkdownRu as string) : (resumeMarkdownEn as string));
+    const renderResume = () => {
+      try {
+        // Поддержка маркера разрыва страниц в markdown: <!-- pagebreak -->
+        const src = pickResumeMarkdown();
+        const withBreaks = src.replace(/<!--\s*pagebreak\s*-->/gi, '<div class="page-break"></div>');
+        resumeHtml.value = md.render(withBreaks);
+      } catch {}
+    };
+
+    onMounted(() => { renderResume(); });
+    watch(() => locale.value, () => { renderResume(); });
 
     const talt = (item: any) => (locale.value === 'ru' ? (item.alt?.ru || item.alt?.en) : (item.alt?.en || item.alt?.ru));
     const tpatent = (p: any) => (locale.value === 'ru' ? (p.title?.ru || p.title?.en) : (p.title?.en || p.title?.ru));
@@ -427,23 +437,38 @@ export default defineComponent({
         return base;
       };
       const base = computeBase();
-      const url = new URL(base + 'DIMFLIX-Resume.pdf', window.location.origin).toString();
-      try {
+      const lang = (locale.value === 'ru' ? 'ru' : 'en');
+      const primaryName = `DIMFLIX-Resume.${lang}.pdf`;
+      const fallbackName = 'DIMFLIX-Resume.pdf';
+
+      const fetchPdf = async (name: string) => {
+        const url = new URL(base + name, window.location.origin).toString();
         const res = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
-        if (!res.ok) throw new Error('PDF not found');
+        if (!res.ok) throw new Error('PDF not found: ' + url);
         const ct = res.headers.get('content-type') || '';
         if (ct && !/application\/pdf|application\/octet-stream/i.test(ct)) throw new Error('Unexpected content-type: ' + ct);
         const blob = await res.blob();
-        const dl = URL.createObjectURL(blob);
+        return { blob, url };
+      };
+
+      try {
+        let file;
+        try {
+          file = await fetchPdf(primaryName);
+        } catch {
+          file = await fetchPdf(fallbackName);
+        }
+        const dl = URL.createObjectURL(file.blob);
         const a = document.createElement('a');
         a.href = dl;
-        a.download = 'DIMFLIX-Resume.pdf';
+        a.download = primaryName; // имя файла зависит от языка
         document.body.appendChild(a);
         a.click();
         a.remove();
         setTimeout(() => URL.revokeObjectURL(dl), 5000);
       } catch (e) {
-        alert('PDF не найден по адресу ' + url + '\nЕсли это прод, убедитесь что он задеплоен на путь проекта.\nЛокально — выполните npm run build:pdf.');
+        const url = base + primaryName;
+        alert(t('resume.pdfNotFound', { url }));
       } finally {
         isDownloading.value = false;
       }
@@ -462,6 +487,7 @@ export default defineComponent({
       awardsRest,
       certificatesFirst,
       certificatesRest,
+      t,
       talt,
       tpatent,
       downloadPDF,
@@ -673,14 +699,23 @@ export default defineComponent({
   /* Вписываем изображение в страницу с учетом полей */
   .fit-print,
   .fit-print :deep(img),
-  .multi-page-image-container img {
+  .multi-page-image-container img,
+  #resume-content img.pdf-img {
     width: auto !important;
-    max-width: 180mm !important;
+    max-width: 190mm !important; /* ширина области контента (210 - 2*10) */
     height: auto !important;
-    max-height: 260mm !important; /* 297mm - 2*10mm - запас под подписи */
+    max-height: 250mm !important; /* оставляем запас под подписи */
     object-fit: contain !important;
     display: block;
     margin: 0 auto;
+  }
+  /* Для самой первой страницы патентов, где есть заголовок, ещё сильнее уменьшаем высоту */
+  #resume-content .attachments .page-item.section-start img.pdf-img {
+    max-height: 230mm !important;
+  }
+  /* Отступ для подписи, чтобы она не налезала на изображение */
+  #resume-content .caption {
+    margin-top: 6mm;
   }
 
   /* Скрыть глобальные UI элементы (FAB, pill и т.п.) */

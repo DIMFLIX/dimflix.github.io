@@ -12,7 +12,6 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 
 const DIST_DIR = path.resolve(__dirname, '..', 'dist');
-const OUT_PDF = path.resolve(DIST_DIR, 'DIMFLIX-Resume.pdf');
 const PORT = 5050;
 
 function getMimeType(filePath) {
@@ -85,46 +84,62 @@ function createStaticServer(rootDir) {
 
   try {
     const page = await browser.newPage();
-    const url = `http://localhost:${PORT}/en/resume?pdf=1`;
-    console.log(`[pdf] Opening ${url}`);
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
-    if (typeof page.emulateMedia === 'function') {
-      await page.emulateMedia('print');
+
+    async function exportLocale(loc) {
+      const url = `http://localhost:${PORT}/${loc}/resume?pdf=1`;
+      console.log(`[pdf] Opening ${url}`);
+      await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+      if (typeof page.emulateMedia === 'function') {
+        await page.emulateMedia('print');
+      }
+      // Wait for app render event (from main.ts) to ensure Vue mounted
+      try {
+        await page.evaluate(() => new Promise((resolve) => {
+          document.addEventListener('render-event', () => resolve(null), { once: true });
+          // If already fired, resolve shortly
+          setTimeout(() => resolve(null), 500);
+        }));
+      } catch {}
+      // Extra small delay to allow images to settle
+      await new Promise((r) => setTimeout(r, 800));
+
+      const OUT_PDF_LOC = path.resolve(DIST_DIR, `DIMFLIX-Resume.${loc}.pdf`);
+      console.log(`[pdf] Saving to ${OUT_PDF_LOC}`);
+      await page.pdf({
+        path: OUT_PDF_LOC,
+        format: 'A4',
+        printBackground: true,
+        displayHeaderFooter: false, // гарантированно без колонтитулов
+        margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
+        scale: 1,
+        preferCSSPageSize: true,
+      });
+
+      // Также кладём копию в public/ для dev-сервера
+      try {
+        const PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
+        if (fs.existsSync(PUBLIC_DIR)) {
+          const PUB_OUT = path.resolve(PUBLIC_DIR, `DIMFLIX-Resume.${loc}.pdf`);
+          fs.copyFileSync(OUT_PDF_LOC, PUB_OUT);
+          console.log(`[pdf] Copied to ${PUB_OUT} for dev server (public/)`);
+        }
+      } catch (e) {
+        console.warn('[pdf] Copy to public/ failed:', e && e.message ? e.message : e);
+      }
     }
 
-    // Wait for app render event (from main.ts) to ensure Vue mounted
+    await exportLocale('en');
+    await exportLocale('ru');
+
+    // Remove default PDF if it was copied from public/ during the build step
     try {
-      await page.evaluate(() => new Promise((resolve) => {
-        document.addEventListener('render-event', () => resolve(null), { once: true });
-        // If already fired, resolve shortly
-        setTimeout(() => resolve(null), 500);
-      }));
-    } catch {}
-
-    // Extra small delay to allow images to settle
-    await new Promise((r) => setTimeout(r, 800));
-
-    console.log(`[pdf] Saving to ${OUT_PDF}`);
-    await page.pdf({
-      path: OUT_PDF,
-      format: 'A4',
-      printBackground: true,
-      displayHeaderFooter: false, // гарантированно без колонтитулов
-      margin: { top: '10mm', bottom: '10mm', left: '10mm', right: '10mm' },
-      scale: 1,
-      preferCSSPageSize: true,
-    });
-
-    // Также кладём копию в public/ для dev-сервера
-    try {
-      const PUBLIC_DIR = path.resolve(__dirname, '..', 'public');
-      if (fs.existsSync(PUBLIC_DIR)) {
-        const PUB_OUT = path.resolve(PUBLIC_DIR, 'DIMFLIX-Resume.pdf');
-        fs.copyFileSync(OUT_PDF, PUB_OUT);
-        console.log(`[pdf] Copied to ${PUB_OUT} for dev server (public/)`);
+      const DEFAULT_DIST = path.resolve(DIST_DIR, 'DIMFLIX-Resume.pdf');
+      if (fs.existsSync(DEFAULT_DIST)) {
+        fs.unlinkSync(DEFAULT_DIST);
+        console.log(`[pdf] Removed ${DEFAULT_DIST}`);
       }
     } catch (e) {
-      console.warn('[pdf] Copy to public/ failed:', e && e.message ? e.message : e);
+      console.warn('[pdf] Failed to remove default DIMFLIX-Resume.pdf:', e && e.message ? e.message : e);
     }
 
     console.log('[pdf] Done.');
