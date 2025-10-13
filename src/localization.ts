@@ -80,6 +80,10 @@ export const messages = {
           title: "DefectSenseAI",
           description: "DefectSenseAI is a service for detecting and classifying production defects and various defects in photographs."
         },
+        urbanQuanta: {
+          title: "UrbanQuanta",
+          description: "Optimization of road traffic on a graph of city streets using quantum-inspired methods."
+        },
         pyTypingCourse: {
           title: "PyTypingCourse",
           description: "A course for an in-depth study of typing in the Python programming language"
@@ -204,6 +208,10 @@ export const messages = {
         defectSenseAI: {
           title: "DefectSenseAI",
           description: "DefectSenseAI - сервис для обнаружения и классификации производственных браки и различных дефектов на фотографиях."
+        },
+        urbanQuanta: {
+          title: "UrbanQuanta",
+          description: "Оптимизация дорожного трафика на графе городских улиц с использованием квантово‑вдохновлённых методов."
         },
         pyTypingCourse: {
           title: "PyTypingCourse",

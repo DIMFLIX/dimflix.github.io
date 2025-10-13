@@ -44,6 +44,13 @@ const projectsList = ref([
         link: "https://github.com/DIMFLIX-Hackathons/TerraWing",
         repo: "DIMFLIX-Hackathons/TerraWing"
     },
+	{
+        src: require("@/assets/projects/UrbanQuanta.png"), 
+        title: "portfolio.urbanQuanta.title",
+        description: "portfolio.urbanQuanta.description",
+        link: "https://github.com/DIMFLIX-Hackathons/UrbanQuanta",
+        repo: "DIMFLIX-Hackathons/UrbanQuanta"
+    },
     {
         src: require("@/assets/projects/pyTypingCourse.png"), 
         title: "portfolio.pyTypingCourse.title",
