@@ -439,6 +439,7 @@ const carouselConfig = ref({
   justify-content: space-between;
   padding: 16px;
   background: var(--sbg2-color);
+  border-radius: 15px;
 
   .author {
     display: flex;

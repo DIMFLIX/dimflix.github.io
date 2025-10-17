@@ -331,7 +331,7 @@ body {
 	color: var(--text-color);
 }
 .modal-header {
-	display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px;
+	display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; border-radius: 15px;
 }
 .modal-title { margin: 0; font-size: 18px; color: var(--text-color); }
 .modal-close {
