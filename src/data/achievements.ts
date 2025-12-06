@@ -45,5 +45,6 @@ export const certificatesList = [
   { src: require("@/assets/certificates/траектория-будущего-нейросетевое-искусство.png"), alt: { ru: "«Траектория будущего»: сертификат участника (Нейросетевое искусство).", en: "‘Trajectory of the Future’: participant certificate (Neural Art)." }},
   { src: require("@/assets/certificates/траектория-будущего-финансовая-грамотность.png"), alt: { ru: "«Траектория будущего»: сертификат участника (Финансовая грамотность).", en: "‘Trajectory of the Future’: participant certificate (Financial Literacy)." }},
   { src: require("@/assets/certificates/цифровизация-во-благо.png"), alt: { ru: "Сертификат участника конкурса «Цифровизация во благо».", en: "Participant certificate of the contest ‘Digitalization for Good’." }},
+  { src: require("@/assets/certificates/атомик-хак-3.0.jpg"), alt: { ru: "Диплом участника отборочного этапа фестиваля Хакатонов Атомик Хак 3.0", en: "Diploma of the participant of the qualifying stage of the Atomic Hack 3.0 Hackathon Festival" }},
 ] as any
 
