@@ -24,6 +24,20 @@ const projectsList = ref([
         repo: "DIMFLIX/OmniView"
 	},
 	{
+		src: require("@/assets/projects/bluevein.png"), 
+        title: "portfolio.bluevein.title",
+        description: "portfolio.bluevein.description",
+        link: "https://github.com/meowrch/BlueVein",
+        repo: "meowrch/BlueVein"
+	},
+	{
+		src: require("@/assets/projects/nemo-tags.png"), 
+        title: "portfolio.nemoTags.title",
+        description: "portfolio.nemoTags.description",
+        link: "https://github.com/meowrch/nemo-tags",
+        repo: "meowrch/nemo-tags"
+	},
+	{
         src: require("@/assets/projects/pixelgan.png"), 
         title: "portfolio.pixelGan.title",
         description: "portfolio.pixelGan.description",
@@ -31,18 +45,18 @@ const projectsList = ref([
         repo: "DIMFLIX-Hackathons/PixelGAN"
     },
 	{
+		src: require("@/assets/projects/fat32-raw.png"), 
+        title: "portfolio.fat32Raw.title",
+        description: "portfolio.fat32Raw.description",
+        link: "https://github.com/meowrch/fat32-raw",
+        repo: "meowrch/fat32-raw"
+	},
+	{
         src: require("@/assets/projects/spectrum-security.png"), 
         title: 'portfolio.spectrumSecurity.title',
         description: 'portfolio.spectrumSecurity.description',
         link: "https://github.com/DIMFLIX/Spectrum-Security",
         repo: "DIMFLIX/Spectrum-Security"
-    },
-    {
-        src: require("@/assets/projects/terraWing.png"), 
-        title: "portfolio.terraWing.title",
-        description: "portfolio.terraWing.description",
-        link: "https://github.com/DIMFLIX-Hackathons/TerraWing",
-        repo: "DIMFLIX-Hackathons/TerraWing"
     },
 	{
         src: require("@/assets/projects/UrbanQuanta.png"), 
@@ -50,6 +64,13 @@ const projectsList = ref([
         description: "portfolio.urbanQuanta.description",
         link: "https://github.com/DIMFLIX-Hackathons/UrbanQuanta",
         repo: "DIMFLIX-Hackathons/UrbanQuanta"
+    },
+    {
+        src: require("@/assets/projects/terraWing.png"), 
+        title: "portfolio.terraWing.title",
+        description: "portfolio.terraWing.description",
+        link: "https://github.com/DIMFLIX-Hackathons/TerraWing",
+        repo: "DIMFLIX-Hackathons/TerraWing"
     },
     {
         src: require("@/assets/projects/pyTypingCourse.png"), 

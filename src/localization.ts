@@ -68,6 +68,18 @@ export const messages = {
           title: "Meowrch",
           description: "Meowrch is an Arch-based build sharpened to maximize performance, ergonomics, and beauty."
         },
+        bluevein: {
+          title: "BlueVein",
+          description: "Cross-platform tool to automatically synchronize Bluetooth pairing keys on dual-boot systems. "
+        },
+        fat32Raw: {
+          title: "Fat32-Raw",
+          description: "Rust library for working with FAT32 partitions and images. Provides low-level access to the FAT32 file system with support for reading, writing, creating, and deleting files and directories."
+        },
+        nemoTags: {
+          title: "Nemo Tags",
+          description: "Tag system for Nemo File Manager"
+        },
         pixelGan: {
           title: "PixelGAN",
           description: "A tool designed to improve the quality of photos and videos. It uses a generative-adversarial network algorithm."
@@ -196,6 +208,18 @@ export const messages = {
         meowrch: {
           title: "Meowrch",
           description: "Meowrch - сборка, основанная на Arch, заточенная под максимальную производительность, эргономичность и красоту. "
+        },
+        bluevein: {
+          title: "BlueVein",
+          description: "Кроссплатформенный инструмент для автоматической синхронизации ключей сопряжения Bluetooth в системах с двойной загрузкой (dualboot)."
+        },
+        fat32Raw: {
+          title: "Fat32-Raw",
+          description: "Библиотека Rust для работы с разделами и образами FAT32. Обеспечивает низкоуровневый доступ к файловой системе FAT32 с поддержкой чтения, записи, создания и удаления файлов и каталогов."
+        },
+        nemoTags: {
+          title: "Nemo Tags",
+          description: "Система тегов для Nemo File Manager"
         },
         pixelGan: {
           title: "PixelGAN",
