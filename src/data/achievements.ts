@@ -12,14 +12,31 @@ export const awardsList = [
 export const patentsList = [
   {
     title: {
-      ru: "Программа последовательного получения и обработки видеопотоков с множества USB‑камер, подключенных к одной ЭВМ с помощью USB‑концентратора",
-      en: "Program for sequential acquisition and processing of video streams from multiple USB cameras connected to one PC via a USB hub",
+      ru: "Способ определения гранулометрического состава смеси",
+      en: "Method for determining the particle size distribution of a mixture",
     },
     pages: [
-      require("@/assets/patents/patent-prevm-page1.png"),
-      require("@/assets/patents/patent-prevm-page2.png"),
+      require("@/assets/patents/mixture-PSD-method/p1.png"),
+      require("@/assets/patents/mixture-PSD-method/p2.png"),
+      require("@/assets/patents/mixture-PSD-method/p3.png"),
+      require("@/assets/patents/mixture-PSD-method/p4.png"),
+      require("@/assets/patents/mixture-PSD-method/p5.png"),
+      require("@/assets/patents/mixture-PSD-method/p6.png"),
+      require("@/assets/patents/mixture-PSD-method/p7.png"),
+      require("@/assets/patents/mixture-PSD-method/p8.png"),
     ],
   },
+  // TODO: Display two elements normally in About.vue
+  // {
+  //   title: {
+  //     ru: "Программа последовательного получения и обработки видеопотоков с множества USB‑камер, подключенных к одной ЭВМ с помощью USB‑концентратора",
+  //     en: "Program for sequential acquisition and processing of video streams from multiple USB cameras connected to one PC via a USB hub",
+  //   },
+  //   pages: [
+  //     require("@/assets/patents/omniview-software-registration-certificate/p1.png"),
+  //     require("@/assets/patents/omniview-software-registration-certificate/p2.png"),
+  //   ],
+  // },
 ] as any
 
 export const certificatesList = [
