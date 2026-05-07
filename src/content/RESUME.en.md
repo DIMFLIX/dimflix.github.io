@@ -56,10 +56,10 @@ A highly motivated and experienced Full-Stack and AI/ML developer with proven le
 
 ### Open-Source
 
--   **meowrch:** Author and main developer of a distribution based on Arch Linux for programmers. The project has **700+ stars on GitHub** and includes an ecosystem of utilities:
-    - **mewline:** An elegant and extensible status bar.
+-   **meowrch:** Author and main developer of a distribution based on Arch Linux for programmers. The project has a large international community, boasts **over 900 stars on GitHub**, and includes an ecosystem of utilities:
+    - **mewline:** An elegant and extensible status bar written in Python and GTK
     - **pawlette:** A system for automatically changing themes for Linux applications based on git.
-    - **BlueVein (in development):** A Rust utility for synchronizing Bluetooth device pairing keys between Windows and Linux in dual-boot systems for seamless switching.
+    - **BlueVein:** A Rust utility for synchronizing Bluetooth device pairing keys between Windows and Linux in dual-boot systems for seamless switching.
 - **fat32-raw:** A cross-platform library in Rust for low-level work with the FAT32 file system. Supports read/write, file/directory creation/deletion, and Long File Names (LFN).
 - **UrbanQuanta:** Optimization of road traffic on a city street graph using quantum-inspired methods.
 - **OmniView:** A system for simultaneously viewing and processing streams from multiple cameras (USB/IP) with the possibility of integration into computer vision.
