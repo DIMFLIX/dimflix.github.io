@@ -26,17 +26,16 @@ export const patentsList = [
       require("@/assets/patents/mixture-PSD-method/p8.png"),
     ],
   },
-  // TODO: Display two elements normally in About.vue
-  // {
-  //   title: {
-  //     ru: "Программа последовательного получения и обработки видеопотоков с множества USB‑камер, подключенных к одной ЭВМ с помощью USB‑концентратора",
-  //     en: "Program for sequential acquisition and processing of video streams from multiple USB cameras connected to one PC via a USB hub",
-  //   },
-  //   pages: [
-  //     require("@/assets/patents/omniview-software-registration-certificate/p1.png"),
-  //     require("@/assets/patents/omniview-software-registration-certificate/p2.png"),
-  //   ],
-  // },
+  {
+    title: {
+      ru: "Программа последовательного получения и обработки видеопотоков с множества USB‑камер, подключенных к одной ЭВМ с помощью USB‑концентратора",
+      en: "Program for sequential acquisition and processing of video streams from multiple USB cameras connected to one PC via a USB hub",
+    },
+    pages: [
+      require("@/assets/patents/omniview-software-registration-certificate/p1.png"),
+      require("@/assets/patents/omniview-software-registration-certificate/p2.png"),
+    ],
+  },
 ] as any
 
 export const certificatesList = [

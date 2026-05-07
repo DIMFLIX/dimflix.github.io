@@ -1,7 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n';
 import DiamondLine from "@/components/DiamondLine.vue";
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 
 import { VueMarqueeSlider } from 'vue3-marquee-slider';
 import Image from 'primevue/image';
@@ -96,12 +96,13 @@ const config = ref({
   gap: 100,
 });
 
-// Отдельная конфигурация для патентов - всегда показывает 1 элемент
+// Отдельная конфигурация для патентов - показывает по 2 на десктопе, 1 на мобильных
 const patentsConfig = ref({
-  itemsToShow: 1,
-  wrapAround: true,
+  itemsToShow: 2,
+  wrapAround: false,
   transition: 500,
-  gap: 100,
+  gap: 20,
+  snapAlign: 'start',
 });
 
 import { awardsList as awardsData, patentsList as patentsData, certificatesList as certificatesData } from '@/data/achievements'
@@ -109,6 +110,7 @@ import { awardsList as awardsData, patentsList as patentsData, certificatesList 
 const awardsList = ref(awardsData)
 
 const patentsList = ref(patentsData);
+const usePatentsCarousel = computed(() => patentsList.value.length >= 4);
 
 const certificatesList = ref(certificatesData)
 
@@ -129,15 +131,23 @@ const updateScreenSize = () => {
 	if (screenSize.value <= 600) {
 		config.value.itemsToShow = 1;
 		config.value.gap = 30;
+		patentsConfig.value.itemsToShow = 1;
+		patentsConfig.value.gap = 15;
 	} else if (screenSize.value <= 900) {
 		config.value.itemsToShow = 2;
 		config.value.gap = 30;
+		patentsConfig.value.itemsToShow = 2;
+		patentsConfig.value.gap = 15;
 	} else if (screenSize.value <= 1100) {
 		config.value.itemsToShow = 3;
-        config.value.gap = 50;
+		config.value.gap = 50;
+		patentsConfig.value.itemsToShow = 2;
+		patentsConfig.value.gap = 20;
 	} else {
 		config.value.itemsToShow = 4;
 		config.value.gap = 100;
+		patentsConfig.value.itemsToShow = 2;
+		patentsConfig.value.gap = 20;
 	}
 };
 
@@ -231,7 +241,7 @@ onBeforeUnmount(() => {
 			<div class="box-title">
 				<p v-html="t('about.patents.title')"></p>
 			</div>
-			<Carousel v-bind="patentsConfig">
+			<Carousel v-if="usePatentsCarousel" v-bind="patentsConfig">
 				<Slide v-for="patent in patentsList" :key="patent.title">
 					<span :title="patent.title[locale] || patent.title.en || patent.title.ru">
 						<MultiPageImage 
@@ -247,6 +257,18 @@ onBeforeUnmount(() => {
 					<Pagination />
 				</template>
 			</Carousel>
+			<div v-else class="patents-grid">
+				<div v-for="patent in patentsList" :key="patent.title" class="patent-item">
+					<span :title="patent.title[locale] || patent.title.en || patent.title.ru">
+						<MultiPageImage 
+							:pages="patent.pages" 
+							:title="patent.title[locale] || patent.title.en || patent.title.ru" 
+							preview
+							class="image"
+						/>
+					</span>
+				</div>
+			</div>
 		</div>
 		<div class="box box-imgs">
 			<div class="box-title"><p v-html="t('about.awards.title')"></p></div>
@@ -397,17 +419,16 @@ onBeforeUnmount(() => {
 	}
 }
 
-// Стили для блока патентов
-.patent-container {
+.patents-grid {
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	gap: 20px;
+	justify-content: flex-start;
+	align-items: flex-start;
 	width: 100%;
-	
-	.patent-image {
-		width: auto;
-		max-width: 100%;
-		height: auto;
+
+	.patent-item {
+		flex: 0 1 auto;
+		max-width: 45%;
 	}
 }
 
@@ -492,6 +513,16 @@ onBeforeUnmount(() => {
 
 	.box-imgs {
 		gap: 20px !important;
+	}
+
+	.patents-grid {
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+
+		.patent-item {
+			max-width: 80%;
+		}
 	}
 
 	/* Адаптация блока About Me */
