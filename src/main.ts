@@ -11,7 +11,7 @@ import i18n from './i18n'
 import { Buffer } from 'buffer';
 (window as any).Buffer = Buffer; // Для браузеров, где Buffer не определён:cite[3]
 
-createApp(App)
+const app = createApp(App)
   .use(PrimeVue, {
       theme: {
           preset: Aura,
@@ -25,10 +25,13 @@ createApp(App)
   .component('Image', Image)
   .use(store)
   .use(router)
-  .use(i18n)
-  .mount("#app");
+  .use(i18n);
+
+app.mount("#app");
 
 // Signal for prerender-spa-plugin to finish rendering
-if (typeof document !== 'undefined') {
-  document.dispatchEvent(new Event('render-event'))
-}
+router.isReady().then(() => {
+  if (typeof document !== 'undefined') {
+    document.dispatchEvent(new Event('render-event'))
+  }
+});
