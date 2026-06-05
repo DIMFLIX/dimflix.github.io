@@ -169,7 +169,7 @@ onBeforeUnmount(() => {
 		<div class="box">
 			<div class="box-title"><p v-html="t('about.aboutme.title')"></p></div>
 			<div class="img-and-text">
-				<img class="photo" src="@/assets/my-photo1.jpg" :alt="locale === 'ru' ? 'Фото Дмитрия (DIMFLIX) — Full‑Stack & AI/ML разработчик' : 'Photo of Dmitry (DIMFLIX) — Full‑Stack & AI/ML developer'">
+				<img class="photo" src="@/assets/my-photo5.jpg" :alt="locale === 'ru' ? 'Фото Дмитрия (DIMFLIX) — Full‑Stack & AI/ML разработчик' : 'Photo of Dmitry (DIMFLIX) — Full‑Stack & AI/ML developer'">
 				<div class="text">
 					<h4 v-html="t('about.aboutme.hello')"></h4>
 					<h2 v-html="t('about.aboutme.name')"></h2>

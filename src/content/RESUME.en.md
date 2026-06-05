@@ -3,8 +3,6 @@
 
 A highly motivated and experienced Full-Stack and AI/ML developer with proven leadership qualities and a focus on achieving results. Winner and prize-holder of international and national hackathons, author of a software patent, and creator of a popular Open-Source project. Included in the state information resource on individuals who have shown outstanding abilities (GIR).
 
-***
-
 ## Professional Qualities
 
 -   **Natural Leader and Organizer:** I know how to inspire and lead a team towards a goal, as confirmed by numerous victories in hackathons and successful leadership of the `meowrch` Open-Source project. I effectively coordinate tasks and resources to achieve maximum results.
@@ -13,8 +11,6 @@ A highly motivated and experienced Full-Stack and AI/ML developer with proven le
 -   **Efficiency and Impatience with Procrastination:** I identify and eliminate inefficient processes, striving for maximum productivity. The development of automation tools (pawlette) and low-level libraries in Rust (fat32-raw) reflects a commitment to creating high-performance systems.
 -   **Strong Communication Skills:** I have well-developed verbal skills, easily build connections, and can convey my ideas clearly, which is confirmed by my experience speaking at the Euro-Asian IT Forum.
 
-***
-
 ## Key Competencies
 
 -   **AI/ML:** Development, training, and implementation of machine learning models (computer vision, recommender systems). Experience with PyTorch, Scikit-learn, YOLO.
@@ -22,8 +18,6 @@ A highly motivated and experienced Full-Stack and AI/ML developer with proven le
 -   **Desktop & Mobile:** Creation of cross-platform applications (PyQt, Tauri, Ionic & Capacitor).
 -   **System Administration:** Deep knowledge of Linux (Arch), experience in creating custom distributions and automation using Bash/Python.
 -   **Commercial Experience:** Over 3 years of freelance experience, managing projects valued at over $5000.
-
-***
 
 ## Skills
 
@@ -44,8 +38,6 @@ A highly motivated and experienced Full-Stack and AI/ML developer with proven le
         -   Mobile: Ionic + Capacitor, AndroidJS
     -   Tools: Docker, Git, Nginx
 -   **UI/UX:** Photoshop, Illustrator, Adobe XD, Figma
-
-***
 
 ## Key Projects and Achievements
 
@@ -79,20 +71,14 @@ A highly motivated and experienced Full-Stack and AI/ML developer with proven le
 | 17.05.2024   | "IT-Planet" Olympiad Finals: AI-SportTech — SportTechCup 2024 | All-Russian     | **3rd place** |
 | 21.02.2024   | Presentation at the Euro-Asian IT Forum                 | International   | -           |
 
-***
-
 ## Education
 
 -   **Nizhny Novgorod Radio Engineering College** - (09.02.07) Information Systems and Programming
-
-***
 
 ## Languages
 
 -   **Russian** — Native
 -   **English** — A2-B1, actively improving
-
-***
 
 ## Additional
 

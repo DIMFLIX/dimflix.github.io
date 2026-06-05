@@ -103,6 +103,30 @@ function createStaticServer(rootDir) {
       // Extra small delay to allow images to settle
       await new Promise((r) => setTimeout(r, 800));
 
+      // Оборачиваем каждый заголовок (h2/h3/h4) + несколько следующих элементов
+      // в <div style="break-inside:avoid">, чтобы заголовок не оставался один внизу страницы.
+      await page.evaluate(() => {
+        const MIN_SIBLINGS = 3; // минимум элементов после заголовка, которые должны быть на той же странице
+        const container = document.querySelector('#resume-content .markdown-body');
+        if (!container) return;
+        const headings = container.querySelectorAll('h2, h3, h4');
+        headings.forEach((h) => {
+          const wrapper = document.createElement('div');
+          wrapper.style.breakInside = 'avoid';
+          wrapper.style.pageBreakInside = 'avoid';
+          h.parentNode.insertBefore(wrapper, h);
+          wrapper.appendChild(h);
+          let count = 0;
+          while (count < MIN_SIBLINGS && wrapper.nextSibling) {
+            const next = wrapper.nextSibling;
+            // Не захватываем другие заголовки — это начало нового раздела
+            if (next.nodeType === 1 && /^H[1-4]$/i.test(next.tagName)) break;
+            wrapper.appendChild(next);
+            count++;
+          }
+        });
+      });
+
       const OUT_PDF_LOC = path.resolve(DIST_DIR, `DIMFLIX-Resume.${loc}.pdf`);
       console.log(`[pdf] Saving to ${OUT_PDF_LOC}`);
       await page.pdf({

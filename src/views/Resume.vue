@@ -605,6 +605,16 @@ export default defineComponent({
 .markdown-body :deep(p) {
   color: var(--text-color);
 }
+.markdown-body :deep(ul) {
+  list-style-type: disc;
+  padding-left: 1.5em;
+}
+.markdown-body :deep(ul ul) {
+  list-style-type: circle;
+}
+.markdown-body :deep(li) {
+  margin-bottom: 0.4em;
+}
 
 .attachments {
   margin-top: 2rem;
@@ -726,15 +736,25 @@ export default defineComponent({
   #resume-content :deep(h1),
   #resume-content :deep(h2),
   #resume-content :deep(h3),
+  #resume-content :deep(h4),
   #resume-content h1,
   #resume-content h2,
-  #resume-content h3 { break-after: avoid-page; page-break-after: avoid; }
+  #resume-content h3,
+  #resume-content h4 { break-after: avoid !important; page-break-after: avoid !important; }
   #resume-content :deep(h1) + *,
   #resume-content :deep(h2) + *,
   #resume-content :deep(h3) + *,
+  #resume-content :deep(h4) + *,
   #resume-content h1 + *,
   #resume-content h2 + *,
-  #resume-content h3 + * { break-before: avoid-page; page-break-before: avoid; }
+  #resume-content h3 + *,
+  #resume-content h4 + * { break-before: avoid !important; page-break-before: avoid !important; }
+
+  /* Списки не отрывать от заголовка */
+  #resume-content :deep(ul),
+  #resume-content :deep(ol) { list-style-type: disc; padding-left: 1.5em; }
+  #resume-content :deep(ul ul) { list-style-type: circle; }
+  #resume-content :deep(li) { margin-bottom: 0.3em; }
 
   /* Начинать разделы вложений с новой страницы и давать место под заголовок */
   #resume-content .attachments h2 {
@@ -808,6 +828,9 @@ export default defineComponent({
 .pdf-sandbox #resume-content .caption { opacity: 1 !important; }
 /* Крупнее шрифт для PDF, сохраняем читабельность */
 .pdf-sandbox #resume-content .markdown-body { font-size: 18px; line-height: 1.7; }
+.pdf-sandbox #resume-content .markdown-body ul { list-style-type: disc; padding-left: 1.5em; }
+.pdf-sandbox #resume-content .markdown-body ul ul { list-style-type: circle; }
+.pdf-sandbox #resume-content .markdown-body li { margin-bottom: 0.3em; }
 
 .pdf-sandbox .grid { display: block !important; }
 .pdf-sandbox .page-item { page-break-after: always; break-after: page; }

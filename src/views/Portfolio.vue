@@ -17,18 +17,18 @@ const projectsList = ref([
         repo: "meowrch/meowrch"
     },
 	{
-		src: require("@/assets/projects/omniview.png"), 
-        title: "portfolio.omniview.title",
-        description: "portfolio.omniview.description",
-        link: "https://github.com/DIMFLIX/OmniView",
-        repo: "DIMFLIX/OmniView"
-	},
-	{
 		src: require("@/assets/projects/bluevein.png"), 
         title: "portfolio.bluevein.title",
         description: "portfolio.bluevein.description",
         link: "https://github.com/meowrch/BlueVein",
         repo: "meowrch/BlueVein"
+	},
+	{
+		src: require("@/assets/projects/fat32-raw.png"), 
+        title: "portfolio.fat32Raw.title",
+        description: "portfolio.fat32Raw.description",
+        link: "https://github.com/meowrch/fat32-raw",
+        repo: "meowrch/fat32-raw"
 	},
 	{
 		src: require("@/assets/projects/nemo-tags.png"), 
@@ -38,19 +38,19 @@ const projectsList = ref([
         repo: "meowrch/nemo-tags"
 	},
 	{
+		src: require("@/assets/projects/omniview.png"), 
+        title: "portfolio.omniview.title",
+        description: "portfolio.omniview.description",
+        link: "https://github.com/DIMFLIX/OmniView",
+        repo: "DIMFLIX/OmniView"
+	},
+	{
         src: require("@/assets/projects/pixelgan.png"), 
         title: "portfolio.pixelGan.title",
         description: "portfolio.pixelGan.description",
         link: "https://github.com/DIMFLIX-Hackathons/PixelGAN",
         repo: "DIMFLIX-Hackathons/PixelGAN"
     },
-	{
-		src: require("@/assets/projects/fat32-raw.png"), 
-        title: "portfolio.fat32Raw.title",
-        description: "portfolio.fat32Raw.description",
-        link: "https://github.com/meowrch/fat32-raw",
-        repo: "meowrch/fat32-raw"
-	},
 	{
         src: require("@/assets/projects/spectrum-security.png"), 
         title: 'portfolio.spectrumSecurity.title',
