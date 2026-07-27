@@ -12,6 +12,25 @@ export const awardsList = [
 export const patentsList = [
   {
     title: {
+      ru: "Анализ существующих патентных решений вибрационных дозаторов для высокоточного дозирования сыпучих материалов",
+      en: "Analysis of existing patent solutions for vibratory feeders for high-precision dosing of bulk materials",
+    },
+    pages: [
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/1.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/2.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/3.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/4.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/5.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/6.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/7.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/8.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/9.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/10.png"),
+      require("@/assets/patents/scientific-article-Analysis-of-existing-vibrating-feeders/11.png"),
+    ],
+  },
+  {
+    title: {
       ru: "Способ определения гранулометрического состава смеси",
       en: "Method for determining the particle size distribution of a mixture",
     },
